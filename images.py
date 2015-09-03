@@ -7,12 +7,14 @@ STAIRS_DOWN = None
 STAIRS_UP = None
 
 RAT = None
+GHOST = None
 
 def init():
-  global STAIRS_DOWN, STAIRS_UP, RAT
+  global STAIRS_DOWN, STAIRS_UP, RAT, GHOST
   STAIRS_DOWN = pygame.image.load(r'resources\stairs_down.png')
   STAIRS_UP = pygame.image.load(r'resources\stairs_up.png')
   RAT = pygame.image.load(r'resources\rat.png')
+  GHOST = pygame.image.load(r'resources\ghost.png')
 
 
 def draw_image_in_cell(constants, surface, image, x, y):
