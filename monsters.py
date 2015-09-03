@@ -44,7 +44,7 @@ class Ghost(Monster):
   def __init__(self, constants, avoid_x, avoid_y):
     super(Ghost, self).__init__(constants, avoid_x, avoid_y)
     self.DAMAGE = 2
-    self.COLOR = colors.SOLID_WHITE
+    self.IMAGE = images.GHOST
 
   def may_move(self, maze, direction):
     if direction == 0:

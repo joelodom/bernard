@@ -421,24 +421,6 @@ def run_level(constants, screen, player, mazes):
       pause(5000)
       return None # no next level
 
-    # test for stairs down
-    if (player_has_moved
-      and player.x == constants.MAZE_WIDTH - 1 and player.y == constants.MAZE_HEIGHT - 1):
-      next_level = (constants.LEVEL + 1)
-      draw_centered_message(screen, "Going to Level %s" % next_level)
-      sounds.stop_all_sounds()
-      pause(2000)
-      return next_level
-
-    # test for stairs up
-    if player_has_moved and player.x == 0 and player.y == 0:
-      next_level = (constants.LEVEL - 1)
-      if next_level > 0:
-        draw_centered_message(screen, "Going to Level %s" % next_level)
-        sounds.stop_all_sounds()
-        pause(2000)
-        return next_level
-
     # wait for an event
     event = pygame.event.wait()
 
@@ -485,11 +467,25 @@ def run_level(constants, screen, player, mazes):
       # send tick to all monsters
       monsters_in_maze.tick(maze, player, weapon_hit_squares)
 
-    # handle arrow keys
+    # handle arrow keys and asined and desined keys
     elif event.type == pygame.KEYUP and (event.key == pygame.K_UP or event.key == pygame.K_RIGHT
-      or event.key == pygame.K_DOWN or event.key == pygame.K_LEFT):
+      or event.key == pygame.K_DOWN or event.key == pygame.K_LEFT or pygame.K_u or pygame.K_d):
 
-      if event.key == pygame.K_UP:
+      if (event.key == pygame.K_d
+        and player.x == constants.MAZE_WIDTH - 1 and player.y == constants.MAZE_HEIGHT - 1):
+        next_level = (constants.LEVEL + 1)
+        draw_centered_message(screen, "Going to Level %s" % next_level)
+        sounds.stop_all_sounds()
+        pause(2000)
+        return next_level
+      elif event.key == pygame.K_u and player.x == 0 and player.y == 0:
+        next_level = (constants.LEVEL - 1)
+        if next_level > 0:
+          draw_centered_message(screen, "Going to Level %s" % next_level)
+          sounds.stop_all_sounds()
+          pause(2000)
+          return next_level
+      elif event.key == pygame.K_UP:
         player.facing = 0
         if not maze.get_walls(player.x, player.y)[0]:
           player.y = player.y - 1
@@ -643,7 +639,7 @@ def main():
 
   # shutdown pygame
   pygame.quit()
-  sys.exit()
+  sys.exit(1)
 
 
 if __name__ == '__main__':
