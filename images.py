@@ -2,6 +2,7 @@
 
 import pygame
 
+PLAYER = None
 
 STAIRS_DOWN = None
 STAIRS_UP = None
@@ -10,7 +11,8 @@ RAT = None
 GHOST = None
 
 def init():
-  global STAIRS_DOWN, STAIRS_UP, RAT, GHOST
+  global PLAYER, STAIRS_DOWN, STAIRS_UP, RAT, GHOST
+  PLAYER = pygame.image.load(r'resources\player.png')
   STAIRS_DOWN = pygame.image.load(r'resources\stairs_down.png')
   STAIRS_UP = pygame.image.load(r'resources\stairs_up.png')
   RAT = pygame.image.load(r'resources\rat.png')
