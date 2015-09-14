@@ -4,6 +4,7 @@ import pygame
 import colors
 import sounds
 import food
+import images
 
 
 class Player:
@@ -20,11 +21,7 @@ class Player:
     self.food.extend(food.list_food())
 
   def draw(self, surface):
-    pygame.draw.rect(surface, colors.SOLID_BLUE,
-      (self.constants.CELL_WIDTH*self.x + self.constants.WALL_WIDTH,
-      self.constants.CELL_HEIGHT*self.y + self.constants.WALL_WIDTH,
-      self.constants.CELL_WIDTH - 2*self.constants.WALL_WIDTH,
-      self.constants.CELL_HEIGHT - 2*self.constants.WALL_WIDTH), 0)
+    images.draw_image_in_cell(self.constants, surface, images.PLAYER, self.x, self.y)
 
   def handle_monster_collision(self, monster):
     sounds.PLAYER_HIT_SOUND.play()
