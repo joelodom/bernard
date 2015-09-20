@@ -184,6 +184,19 @@ def build_maze_surface(maze, constants):
   return maze_surface
 
 
+def build_objects_surface(objects_in_maze, constants):
+
+  # initialize the objects surface
+  objects_surface = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+  objects_surface = objects_surface.convert_alpha()
+  objects_surface.fill(colors.TRANSPARENT)
+
+  # draw objects (note that this currently is a ChestsInMaze object, but this could change
+  objects_in_maze.draw(objects_surface)
+
+  return objects_surface
+
+
 def apply_bomb_damage(bomb, player, monsters_in_maze, maze, constants):
   y_min = bomb.y - bomb.BLAST_RADIUS
   if y_min < 0: y_min = 0
@@ -238,7 +251,7 @@ def apply_bomb_damage(bomb, player, monsters_in_maze, maze, constants):
 
 
 def build_sprite_surface(
-  constants, monsters_in_maze, weapons, weapon_is_firing, player, bomb, maze, chests_in_maze):
+  constants, monsters_in_maze, weapons, weapon_is_firing, player, bomb, maze):
 
   # initialize the sprite surface
   sprite_surface = pygame.Surface(
@@ -248,9 +261,6 @@ def build_sprite_surface(
 
   # draw monsters
   monsters_in_maze.draw(sprite_surface)
-
-  # draw chest
-  chests_in_maze.draw(sprite_surface)
 
   # draw bomb
   if bomb != None:
@@ -399,22 +409,28 @@ class Constants: # constants change with change in level or screen size
     if self.WALL_WIDTH < 1: self.WALL_WIDTH = 1
 
 
-def run_level(constants, screen, player, mazes):
+def run_level(constants, screen, player, mazes, maze_objects):
+
   # get the maze or instantiate a random maze
+
   maze = mazes.get(constants.LEVEL, None)
   if maze == None:
     maze = third_party.maze.Maze(width = constants.MAZE_WIDTH, height = constants.MAZE_HEIGHT)
     mazes[constants.LEVEL] = maze
 
+  objects_in_maze = maze_objects.get(constants.LEVEL, None)
+  if objects_in_maze == None:
+    # populate with chests (other objects coming soon!)
+    objects_in_maze = chest.ChestsInMaze(constants)
+    maze_objects[constants.LEVEL] = objects_in_maze
+
   # populate with monsters
   monsters_in_maze = monsters.MonstersInMaze(constants, player.x, player.y)
-
-  # populate with chests
-  chests_in_maze = chest.ChestsInMaze(constants)
 
   # build static surfaces
   background_surface = build_background_surface(constants)
   maze_surface = build_maze_surface(maze, constants)
+  objects_surface = build_objects_surface(objects_in_maze, constants)
 
   # start a clock tick event (updates clock tick if already set)
   pygame.time.set_timer(CLOCK_TICK_EVENT, CLOCK_TICK_MS)
@@ -434,13 +450,14 @@ def run_level(constants, screen, player, mazes):
   while True:
     # build dynamic surfaces
     sprite_surface = build_sprite_surface(
-      constants, monsters_in_maze, weapons, weapon_is_firing, player, bomb, maze, chests_in_maze)
+      constants, monsters_in_maze, weapons, weapon_is_firing, player, bomb, maze)
     lantern_surface = build_lantern_surface(constants, player)
     info_surface = build_info_surface(constants, player, bomb)
 
     # blit the surfaces to the screen
     screen.blit(background_surface, (0, 0))
     screen.blit(maze_surface, (0, 0))
+    screen.blit(objects_surface, (0, 0))
     screen.blit(sprite_surface, (0, 0))
     screen.blit(lantern_surface, (0, 0))
     screen.blit(info_surface, (0, 0))
@@ -619,6 +636,7 @@ def run_level(constants, screen, player, mazes):
       # rebuild static surfaces
       background_surface = build_background_surface(constants)
       maze_surface = build_maze_surface(maze, constants)
+      objects_surface = build_objects_surface(objects_in_maze, constants)
 
     # handle quit events
     elif event.type == pygame.QUIT or (
@@ -661,12 +679,13 @@ def main():
   player = player_module.Player(constants)
   player.weapon = weapons.MiniBlaster(constants)
 
-  # instantiate a dictionary of mazes
+  # instantiate a dictionary of mazes and their objects
   mazes = {}
+  maze_objects = {}
 
   # loop through levels
   while True:
-    next_level = run_level(constants, screen, player, mazes)
+    next_level = run_level(constants, screen, player, mazes, maze_objects)
     sounds.stop_all_sounds()
     if next_level == None: # end of game
       break
