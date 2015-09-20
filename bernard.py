@@ -1,4 +1,4 @@
-# Copyright (c) 2013 by Joel Odom & Alex Odom, Marietta, GA All Rights Reserved
+# Copyright (c) 2013-2015 by Joel Odom & Alex Odom, Marietta, GA All Rights Reserved
 
 import pygame
 import sys
@@ -594,6 +594,11 @@ def run_level(constants, screen, player, mazes):
         return None # no next level
 
 
+def exit_program():
+  pygame.quit()
+  sys.exit()
+
+
 def main():
   # check the Python version so that We don't end up with strange behavior
   version = sys.version_info
@@ -644,9 +649,7 @@ def main():
       player.facing = 0 # north
     level = next_level
 
-  # shutdown pygame
-  pygame.quit()
-  sys.exit()
+  exit_program()
 
 
 if __name__ == '__main__':

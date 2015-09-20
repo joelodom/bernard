@@ -1,8 +1,9 @@
-# Copyright (c) 2013 by Joel Odom & Alex Odom, Marietta, GA All Rights Reserved
+# Copyright (c) 2013-2015 by Joel Odom & Alex Odom, Marietta, GA All Rights Reserved
 
 import pygame
 import colors
 import gui
+import bernard
 
 
 BORDER_WIDTH = 10
@@ -13,7 +14,7 @@ class Inventory:
     self.player = player
 
     # add food list box
-    self.list_box_food = gui.ListBox(10, 10, 200, 400)
+    self.list_box_food = gui.ListBox(10, 10, 200, 400, 'Food')
     for food_item in player.food:
       item = gui.ListBoxItem()
       item.TEXT = food_item.NAME
@@ -43,7 +44,10 @@ class Inventory:
         self.list_box_food.select_next_item()
         need_redraw = True
 
-      # TODO: resize and quit events
+      # TODO: handle resize
+
+      elif event.type == pygame.QUIT:
+        bernard.exit_program()
 
 
   def draw(self, surface):
