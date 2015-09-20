@@ -7,7 +7,11 @@ import colors
 # tunables
 
 BORDER_WIDTH = 3
+
 TITLE_X_INDENT = 10 # pixles
+
+SELECTED_BORDER_X_INDENT = 8 # pixles
+SELECTED_BORDER_Y_SPACING = 2 # pixles
 
 
 class ListBoxItem:
@@ -41,10 +45,10 @@ class ListBox:
   def draw(self, surface):
 
     font = pygame.font.SysFont("monospace", 20)
+    (my_width, my_height) = self.surface.get_size()
 
     # draw the background
 
-    (my_width, my_height) = self.surface.get_size()
     pygame.draw.rect(self.surface, colors.SOLID_BLACK, (0, 0, my_width, my_height))
 
     # calculate title sizes
@@ -61,16 +65,24 @@ class ListBox:
     place_item_text_x = 20
 
     for item in self.items:
-      if current_item == self.selected_item:
-        rendered = font.render(item.TEXT, True, colors.SOLID_WHITE, colors.SOLID_BLUE)
-      else:
-        rendered = font.render(item.TEXT, True, colors.SOLID_WHITE)
 
+      # draw the item text
+
+      rendered = font.render(item.TEXT, True, colors.SOLID_WHITE)
       (rendered_width, rendered_height) = font.size(item.TEXT)
       self.surface.blit(rendered, (place_item_text_x, place_item_text_y))
 
-      place_item_text_y = place_item_text_y + round(1.5*rendered_height)
+      # draw a box around the selected item
 
+      if current_item == self.selected_item:
+        pygame.draw.rect(self.surface, colors.SOLID_BLUE,
+          (SELECTED_BORDER_X_INDENT, place_item_text_y - SELECTED_BORDER_Y_SPACING,
+          my_width - 2*SELECTED_BORDER_X_INDENT, rendered_height + 2*SELECTED_BORDER_Y_SPACING),
+          BORDER_WIDTH)
+
+      # go to the next item
+
+      place_item_text_y = place_item_text_y + round(1.5*rendered_height)
       current_item += 1
 
     # draw a border around the control
