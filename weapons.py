@@ -1,4 +1,4 @@
-# Copyright (c) 2013 by Joel Odom & Alex Odom, Marietta, GA All Rights Reserved
+# Copyright (c) 2013-2015 by Joel Odom & Alex Odom, Marietta, GA All Rights Reserved
 
 import random
 import pygame
@@ -53,7 +53,7 @@ class MiniBlaster(Weapon):
     self.BEAM_SEGMENTS = 5
     self.BEAM_WIDTH = 1
     self.NUMBER_OF_BOLTS = 1
-    self.DAMAGE = 2
+    self.DAMAGE = 4
 
 class SuperMegaCannon(Weapon):
   def __init__(self, constants):
@@ -67,7 +67,7 @@ class SuperMegaCannon(Weapon):
     self.BEAM_SEGMENTS = 10
     self.BEAM_WIDTH = 5
     self.NUMBER_OF_BOLTS = 5
-    self.DAMAGE = 6
+    self.DAMAGE = 18
 
 def list_weapons(constants):
   # returns a tuple with an instance of each weapon type

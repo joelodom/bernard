@@ -1,9 +1,8 @@
-# Copyright (c) 2013 by Joel Odom & Alex Odom, Marietta, GA All Rights Reserved
+# Copyright (c) 2013-2015 by Joel Odom & Alex Odom, Marietta, GA All Rights Reserved
 
 import random
 import pygame
 import third_party.maze
-import colors
 import images
 
 
@@ -13,7 +12,6 @@ class Monster:
 
     # defaults
     self.DAMAGE = 1
-    self.COLOR = colors.SOLID_GREEN
     self.IMAGE = None
 
     # the monster will run away while it is scared
@@ -106,14 +104,11 @@ class MonstersInMaze:
     cell_height = self.constants.SCREEN_HEIGHT//self.constants.MAZE_HEIGHT
 
     for monster in self.monsters:
-      if monster.IMAGE != None:
-        images.draw_image_in_cell(self.constants, surface, monster.IMAGE, monster.x, monster.y)
-      else: # draw as a solid color for now
-        pygame.draw.rect(surface, monster.COLOR,
-          (cell_width*monster.x + self.constants.WALL_WIDTH,
-          cell_height*monster.y + self.constants.WALL_WIDTH,
-          cell_width - 2*self.constants.WALL_WIDTH,
-          cell_height - 2*self.constants.WALL_WIDTH), 0)
+      # draw the monster image and scared indicator
+      images.draw_image_in_cell(self.constants, surface, monster.IMAGE, monster.x, monster.y)
+      if monster.scared_ticks > 0:
+        images.draw_indicator_in_cell(
+          self.constants, surface, images.SCARED_INDICATOR, monster.x, monster.y)
 
   def tick(self, maze, player, weapon_hit_squares):
     for monster in self.monsters:
