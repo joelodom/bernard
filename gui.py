@@ -13,6 +13,7 @@ TITLE_X_INDENT = 10 # pixles
 SELECTED_BORDER_X_INDENT = 8 # pixles
 SELECTED_BORDER_Y_SPACING = 2 # pixles
 
+TEXT_BOX_LINE_SPACING = 4 # pixles
 
 class ListBoxItem:
   def __init__(self, short_text, verbose_text):
@@ -128,11 +129,15 @@ class TextBox:
 
     pygame.draw.rect(self.surface, colors.SOLID_BLACK, (0, 0, my_width, my_height))
 
-    # draw the text
+    # draw the text line by line
 
-    font = pygame.font.SysFont("monospace", 20)
-    rendered = font.render(self.text, True, colors.SOLID_WHITE)
-    self.surface.blit(rendered, (10, 10))
+    current_y = TEXT_BOX_LINE_SPACING;
+
+    for line in self.text.splitlines():
+      rendered = font.render(line, True, colors.SOLID_WHITE)
+      (rendered_width, rendered_height) = font.size(line)
+      self.surface.blit(rendered, (10, current_y))
+      current_y += TEXT_BOX_LINE_SPACING + rendered_height
 
     # draw a border around the control
 

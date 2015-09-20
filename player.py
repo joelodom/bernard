@@ -8,6 +8,9 @@ import images
 import bombs
 
 
+NO_SELECTED_ITEM = -1
+
+
 class Player:
   def __init__(self, constants):
     self.constants = constants
@@ -17,12 +20,14 @@ class Player:
     self.y = 0
     self.facing = 2 # south
 
-    # for testing only, give the player one of every food item
     self.food = []
-    self.food.extend(food.list_food())
+    self.selected_food = NO_SELECTED_ITEM
 
-    # for testing only, give the player one of every bomb
     self.bombs = []
+    self.selected_bomb = NO_SELECTED_ITEM
+
+    # for testing only, give the player some stuff
+    self.food.extend(food.list_food())
     self.bombs.extend(bombs.list_bombs(constants))
 
   def draw(self, surface):
@@ -31,3 +36,9 @@ class Player:
   def handle_monster_collision(self, monster):
     sounds.PLAYER_HIT_SOUND.play()
     self.health = self.health - monster.DAMAGE
+
+  def get_selected_food(self):
+    return self.food[self.selected_food] if self.selected_food != NO_SELECTED_ITEM else None
+
+  def get_selected_bomb(self):
+    return self.bombs[self.selected_bomb] if self.selected_bomb != NO_SELECTED_ITEM else None
