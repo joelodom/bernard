@@ -20,14 +20,14 @@ class Inventory:
     # add food list box
     self.list_box_food = gui.ListBox(CONTROL_SPACING, 10, LIST_BOX_WIDTH, LIST_BOX_HEIGHT, 'Food')
     for food_item in player.food:
-      item = gui.ListBoxItem(food_item.NAME, food_item.DESCRIPTION)
+      item = gui.ListBoxItem(food_item.NAME, food_item.DESCRIPTION, food_item)
       self.list_box_food.add_item(item)
 
     # add bombs list box
     self.list_box_bombs = gui.ListBox(
       LIST_BOX_WIDTH + 2*CONTROL_SPACING, 10, LIST_BOX_WIDTH, LIST_BOX_HEIGHT, 'Bombs')
     for bomb in player.bombs:
-      item = gui.ListBoxItem(bomb.NAME, bomb.DESCRIPTION)
+      item = gui.ListBoxItem(bomb.NAME, bomb.DESCRIPTION, bomb)
       item.TEXT = bomb.NAME
       self.list_box_bombs.add_item(item)
 
@@ -35,8 +35,11 @@ class Inventory:
     self.list_box_food.set_focus()
     self.focused_control = self.list_box_food
 
-    # add the text box
-    self.text_box = gui.TextBox(CONTROL_SPACING, 300, 800, 50);
+    # add the descriptive text box
+    self.descriptive_text_box = gui.TextBox(CONTROL_SPACING, 300, 800, 50);
+
+    # add the action text box
+    self.action_text_box = gui.TextBox(CONTROL_SPACING, 400, 800, 50);
 
 
   def seize(self):
@@ -64,7 +67,6 @@ class Inventory:
         need_redraw = True
 
       elif event.type == pygame.KEYUP and event.key == pygame.K_TAB:
-        # obviously requires more work as we add more to the screen
         if self.focused_control == self.list_box_food:
           self.list_box_food.set_focus(False)
           self.list_box_bombs.set_focus()
@@ -75,6 +77,14 @@ class Inventory:
           self.focused_control = self.list_box_food
         need_redraw = True
 
+      elif event.type == pygame.KEYUP and event.key == pygame.K_RETURN:
+        if self.focused_control == self.list_box_food:
+          self.player.set_selected_food(self.list_box_food.get_associated_object())
+        else:
+          self.player.set_selected_bomb(self.list_box_bombs.get_associated_object())
+        return # exit inventory screen
+
+
       # TODO: handle resize
 
       elif event.type == pygame.QUIT:
@@ -83,7 +93,9 @@ class Inventory:
 
   def draw(self, surface):
     # update the text box text
-    self.text_box.set_text(self.focused_control.get_verbose_text())
+    self.descriptive_text_box.set_text(self.focused_control.get_verbose_text())
+    self.action_text_box.set_text(
+      "Press [ENTER] to select %s" % self.focused_control.get_short_text())
 
     # draw a background and a border
     (surface_width, surface_height) = surface.get_size()
@@ -94,4 +106,5 @@ class Inventory:
     # draw controls
     self.list_box_food.draw(surface)
     self.list_box_bombs.draw(surface)
-    self.text_box.draw(surface)
+    self.descriptive_text_box.draw(surface)
+    self.action_text_box.draw(surface)

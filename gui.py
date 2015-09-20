@@ -16,9 +16,10 @@ SELECTED_BORDER_Y_SPACING = 2 # pixles
 TEXT_BOX_LINE_SPACING = 4 # pixles
 
 class ListBoxItem:
-  def __init__(self, short_text, verbose_text):
+  def __init__(self, short_text, verbose_text, associated_object):
     self.short_text = short_text
     self.verbose_text = verbose_text
+    self.associated_object = associated_object
 
 
 class ListBox:
@@ -49,8 +50,14 @@ class ListBox:
     if self.selected_item > 0:
       self.selected_item -= 1
 
+  def get_short_text(self):
+    return self.items[self.selected_item].short_text
+
   def get_verbose_text(self):
     return self.items[self.selected_item].verbose_text
+
+  def get_associated_object(self):
+    return self.items[self.selected_item].associated_object
 
   def draw(self, surface):
 

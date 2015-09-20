@@ -42,3 +42,21 @@ class Player:
 
   def get_selected_bomb(self):
     return self.bombs[self.selected_bomb] if self.selected_bomb != NO_SELECTED_ITEM else None
+
+  def set_selected_food(self, food):
+    i = 0
+    for f in self.food:
+      if f == food:
+        self.selected_food = i
+        return
+      i += 1
+    assert 'Failed to find food'
+
+  def set_selected_bomb(self, bomb):
+    i = 0
+    for b in self.bombs:
+      if b == bomb:
+        self.selected_bomb = i
+        return
+      i += 1
+    assert 'Failed to find bomb'
