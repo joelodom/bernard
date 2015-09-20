@@ -37,11 +37,8 @@ INITIAL_WINDOW_Y = 50
 WALL_COLOR = colors.SOLID_WHITE
 WALL_WIDTH_DIVISOR = 7 # larger divisor means thinner walls
 
-NUMBER_OF_MONSTERS = 1
-MONSTER_DENSITY = 0.02 # number of monsters per cell
-
-NUMBER_OF_CHESTS = 1
-CHEST_DENSITY = 1/100 # one chest every 100 cells
+MONSTER_DENSITY = 0.02
+CHEST_DENSITY = 0.01
 
 CLOCK_TICK_MS = 500 # one unit of game time
 WEAPON_TICK_MS = 100 # for weapon firing redraws and discharge
@@ -390,7 +387,7 @@ class Constants: # constants change with change in level or screen size
     self.MAZE_WIDTH = BASE_MAZE_WIDTH + MAZE_LEVEL_INCREASE*level
     self.MAZE_HEIGHT = BASE_MAZE_HEIGHT + MAZE_LEVEL_INCREASE*level
     self.NUMBER_OF_MONSTERS = round(MONSTER_DENSITY * self.MAZE_WIDTH * self.MAZE_HEIGHT)
-    self.NUMBER_OF_CHESTS = int(CHEST_DENSITY * self.MAZE_WIDTH * self.MAZE_HEIGHT)
+    self.NUMBER_OF_CHESTS = round(CHEST_DENSITY * self.MAZE_WIDTH * self.MAZE_HEIGHT)
     self.screen_changed(screen) # recalculate screen constants
 
   def screen_changed(self, screen):
