@@ -11,7 +11,7 @@ class RottenApple(Food):
   def __init__(self):
     self.NAME = 'Rotten Apple'
     self.COST = 1
-    self.HEALTH_HEAL = 1
+    self.HEALTH_HEAL = 3
     self.DESCRIPTION = ('A gross apple with worms in it (Heals '
       + str(self.HEALTH_HEAL) + ' health)')
 
@@ -20,7 +20,7 @@ class Apple(Food):
   def __init__(self):
     self.NAME = 'Apple'
     self.COST = 6
-    self.HEALTH_HEAL = 3
+    self.HEALTH_HEAL = 6
     self.DESCRIPTION = ('A good cruchy snack to take along in your travels (Heals '
       + str(self.HEALTH_HEAL) + ' health)')
 
@@ -29,7 +29,7 @@ class Cake(Food):
   def __init__(self):
     self.NAME = 'Cake'
     self.COST = 12
-    self.HEALTH_HEAL = 6
+    self.HEALTH_HEAL = 12
     self.DESCRIPTION = ('A perfect thing for a birthday treat (Heals '
       + str(self.HEALTH_HEAL) + ' health)')
 

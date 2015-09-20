@@ -11,7 +11,7 @@ class Bomb:
   def play_sound(self):
     self.SOUND.play()
 
-  def draw(self, surface):
+  def draw(self, surface): # note that x and y must be bound
     pygame.draw.rect(surface, colors.SOLID_RED,
       (self.constants.CELL_WIDTH*self.x + self.constants.WALL_WIDTH,
       self.constants.CELL_HEIGHT*self.y + self.constants.WALL_WIDTH,
@@ -25,11 +25,9 @@ class CherryBomb(Bomb):
   BLAST_RADIUS = 1
   time_remaining = 3
 
-  def __init__(self, constants, x, y):
+  def __init__(self, constants):
     self.SOUND = sounds.DYNAMITE_SOUND # TODO
     self.constants = constants
-    self.x = x
-    self.y = y
 
 
 class Dynamite(Bomb):
@@ -38,11 +36,9 @@ class Dynamite(Bomb):
   BLAST_RADIUS = 3
   time_remaining = 5
 
-  def __init__(self, constants, x, y):
+  def __init__(self, constants):
     self.SOUND = sounds.DYNAMITE_SOUND
     self.constants = constants
-    self.x = x
-    self.y = y
 
 
 class AtomBomb(Bomb):
@@ -51,15 +47,13 @@ class AtomBomb(Bomb):
   BLAST_RADIUS = 10
   time_remaining = 20
 
-  def __init__(self, constants, x, y):
+  def __init__(self, constants):
     self.SOUND = sounds.ATOM_BOMB_SOUND
     self.constants = constants
-    self.x = x
-    self.y = y
 
 
 def list_bombs(constants):
-  return (CherryBomb(constants, 0, 0), (Dynamite(constants, 0, 0)), (AtomBomb(constants, 0, 0)))
+  return (CherryBomb(constants), (Dynamite(constants)), (AtomBomb(constants)))
 
 
 #

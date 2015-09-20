@@ -349,14 +349,11 @@ def build_info_surface(constants, player, bomb):
 
   # draw the text box with the selected items
 
-  selected_food = player.get_selected_food()
-  selected_food_name = 'NONE' if selected_food == None else selected_food.NAME
-
-  selected_bomb = player.get_selected_bomb()
-  selected_bomb_name = 'NONE' if selected_bomb == None else selected_bomb.NAME
-
+  selected_food_name = 'NONE' if player.selected_food == None else player.selected_food.NAME
+  selected_bomb_name = 'NONE' if player.selected_bomb == None else player.selected_bomb.NAME
   selected_items_text = 'Selected Food: %s\nSelected Bomb: %s' % (
     selected_food_name, selected_bomb_name);
+
   selected_items_box = gui.TextBox(
     int(SELECTED_ITEMS_BOX_RELATIVE_X*constants.SCREEN_WIDTH),
     int(SELECTED_ITEMS_BOX_RELATIVE_Y*constants.SCREEN_HEIGHT),
@@ -583,12 +580,24 @@ def run_level(constants, screen, player, mazes, maze_objects):
       store = store_module.Store(constants)
       store.seize()
 
+    # handle skip forward key (temporary code)
+    elif event.type == pygame.KEYUP and event.key == pygame.K_F10:
+      next_level = (constants.LEVEL + 5)
+      draw_centered_message(screen, "Going to Level %s" % next_level)
+      sounds.stop_all_sounds()
+      pause(2000)
+      return next_level
+
     # handle inventory key
     elif event.type == pygame.KEYUP and event.key == pygame.K_i:
       # allow the inventory screen to seize complete control of the game
       weapon_is_firing = False
       sounds.stop_all_sounds()
       inventory.Inventory(player).seize()
+
+    # handle food key
+    elif event.type == pygame.KEYUP and event.key == pygame.K_f:
+      player.use_selected_food()
 
     # handle pause key
     elif event.type == pygame.KEYUP and event.key == pygame.K_p:
@@ -600,9 +609,11 @@ def run_level(constants, screen, player, mazes, maze_objects):
 
     # handle bomb placement key
     elif event.type == pygame.KEYUP and event.key == pygame.K_b and bomb == None:
-      bomb = bombs.Dynamite(constants, player.x, player.y)
-    elif event.type == pygame.KEYUP and event.key == pygame.K_a and bomb == None:
-      bomb = bombs.AtomBomb(constants, player.x, player.y)
+      bomb = player.selected_bomb
+      if bomb != None:
+        player.use_selected_bomb()
+        bomb.x = player.x
+        bomb.y = player.y
 
     # handle weapons events
     elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:

@@ -8,23 +8,20 @@ import images
 import bombs
 
 
-NO_SELECTED_ITEM = -1
-
-
 class Player:
   def __init__(self, constants):
     self.constants = constants
     self.MAX_HEALTH = 100
-    self.health = 100
+    self.health = self.MAX_HEALTH
     self.x = 0
     self.y = 0
     self.facing = 2 # south
 
     self.food = []
-    self.selected_food = NO_SELECTED_ITEM
+    self.selected_food = None
 
     self.bombs = []
-    self.selected_bomb = NO_SELECTED_ITEM
+    self.selected_bomb = None
 
     # for testing only, give the player some stuff
     self.food.extend(food.list_food())
@@ -37,8 +34,18 @@ class Player:
     sounds.PLAYER_HIT_SOUND.play()
     self.health = self.health - monster.DAMAGE
 
-  def get_selected_food(self):
-    return self.food[self.selected_food] if self.selected_food != NO_SELECTED_ITEM else None
+  def use_selected_bomb(self):
+    if self.selected_bomb != None:
+      self.bombs.remove(self.selected_bomb)
+      self.selected_bomb = None
 
-  def get_selected_bomb(self):
-    return self.bombs[self.selected_bomb] if self.selected_bomb != NO_SELECTED_ITEM else None
+  def use_selected_food(self):
+    if self.selected_food != None:
+      self.food.remove(self.selected_food)
+      self.increase_health(self.selected_food.HEALTH_HEAL)
+      self.selected_food = None
+
+  def increase_health(self, amount):
+    self.health += amount
+    if self.health > self.MAX_HEALTH:
+      self.health = self.MAX_HEALTH
