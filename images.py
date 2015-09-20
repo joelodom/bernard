@@ -11,12 +11,14 @@ RAT = None
 GHOST = None
 
 def init():
-  global PLAYER, STAIRS_DOWN, STAIRS_UP, RAT, GHOST
+  global PLAYER, STAIRS_DOWN, STAIRS_UP, RAT, GHOST, TIER_1_CHEST, TIER_1_LOCKED_CHEST
   PLAYER = pygame.image.load(r'resources\player.png')
   STAIRS_DOWN = pygame.image.load(r'resources\stairs_down.png')
   STAIRS_UP = pygame.image.load(r'resources\stairs_up.png')
   RAT = pygame.image.load(r'resources\rat.png')
   GHOST = pygame.image.load(r'resources\ghost.png')
+  TIER_1_CHEST = pygame.image.load(r'resources\Teir_1Chest.png')
+  TIER_1_LOCKED_CHEST = pygame.image.load(r'resources\Teir_1LockedChest.png')
 
 
 def draw_image_in_cell(constants, surface, image, x, y):
