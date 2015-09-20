@@ -1,10 +1,11 @@
-# Copyright (c) 2013 by Joel Odom & Alex Odom, Marietta, GA All Rights Reserved
+# Copyright (c) 2013-2015 by Joel Odom & Alex Odom, Marietta, GA All Rights Reserved
 
 import pygame
 import colors
 import sounds
 import food
 import images
+import bombs
 
 
 class Player:
@@ -19,6 +20,10 @@ class Player:
     # for testing only, give the player one of every food item
     self.food = []
     self.food.extend(food.list_food())
+
+    # for testing only, give the player one of every bomb
+    self.bombs = []
+    self.bombs.extend(bombs.list_bombs(constants))
 
   def draw(self, surface):
     images.draw_image_in_cell(self.constants, surface, images.PLAYER, self.x, self.y)

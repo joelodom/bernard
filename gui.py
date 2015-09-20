@@ -26,6 +26,10 @@ class ListBox:
     self.items = []
     self.selected_item = 0
     self.title = title
+    self.focused = False
+
+  def set_focus(self, focused = True):
+    self.focused = focused
 
   def add_item(self, item):
     '''Adds an item to the listbox.
@@ -72,9 +76,9 @@ class ListBox:
       (rendered_width, rendered_height) = font.size(item.TEXT)
       self.surface.blit(rendered, (place_item_text_x, place_item_text_y))
 
-      # draw a box around the selected item
+      # draw a box around the selected item if we have focus
 
-      if current_item == self.selected_item:
+      if self.focused and current_item == self.selected_item:
         pygame.draw.rect(self.surface, colors.SOLID_BLUE,
           (SELECTED_BORDER_X_INDENT, place_item_text_y - SELECTED_BORDER_Y_SPACING,
           my_width - 2*SELECTED_BORDER_X_INDENT, rendered_height + 2*SELECTED_BORDER_Y_SPACING),

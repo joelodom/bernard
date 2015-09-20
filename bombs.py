@@ -19,7 +19,20 @@ class Bomb:
       self.constants.CELL_HEIGHT - 2*self.constants.WALL_WIDTH), 0)
 
 
+class CherryBomb(Bomb):
+  NAME = 'Cherry Bomb'
+  BLAST_RADIUS = 1
+  time_remaining = 3
+
+  def __init__(self, constants, x, y):
+    self.SOUND = sounds.DYNAMITE_SOUND # TODO
+    self.constants = constants
+    self.x = x
+    self.y = y
+
+
 class Dynamite(Bomb):
+  NAME = 'Dynamite'
   BLAST_RADIUS = 3
   time_remaining = 5
 
@@ -31,6 +44,7 @@ class Dynamite(Bomb):
 
 
 class AtomBomb(Bomb):
+  NAME = 'Atom Bomb'
   BLAST_RADIUS = 10
   time_remaining = 20
 
@@ -42,7 +56,7 @@ class AtomBomb(Bomb):
 
 
 def list_bombs(constants):
-  return ((Dynamite(constants, 0, 0)), (AtomBomb(constants, 0, 0)))
+  return (CherryBomb(constants, 0, 0), (Dynamite(constants, 0, 0)), (AtomBomb(constants, 0, 0)))
 
 
 #
@@ -52,6 +66,7 @@ def list_bombs(constants):
 def test_list_bombs(constants):
   for bomb in list_bombs(constants):
     assert bomb.BLAST_RADIUS > 0, 'missing BLAST_RADIUS'
+    assert len(bomb.NAME) > 0, 'missing NAME'
 
 def run_tests(constants):
   test_list_bombs(constants)

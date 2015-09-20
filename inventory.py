@@ -7,18 +7,38 @@ import bernard
 
 
 BORDER_WIDTH = 10
+CONTROL_SPACING = 30
 
+LIST_BOX_WIDTH = 200
+LIST_BOX_HEIGHT = 200
 
 class Inventory:
   def __init__(self, player):
+
     self.player = player
 
     # add food list box
-    self.list_box_food = gui.ListBox(10, 10, 200, 400, 'Food')
+
+    self.list_box_food = gui.ListBox(CONTROL_SPACING, 10, LIST_BOX_WIDTH, LIST_BOX_HEIGHT, 'Food')
     for food_item in player.food:
       item = gui.ListBoxItem()
       item.TEXT = food_item.NAME
       self.list_box_food.add_item(item)
+
+    # add bombs list box
+
+    self.list_box_bombs = gui.ListBox(
+      LIST_BOX_WIDTH + 2*CONTROL_SPACING, 10, LIST_BOX_WIDTH, LIST_BOX_HEIGHT, 'Bombs')
+    for bomb in player.bombs:
+      item = gui.ListBoxItem()
+      item.TEXT = bomb.NAME
+      self.list_box_bombs.add_item(item)
+
+    # focus on the food list box
+
+    self.list_box_food.set_focus()
+    self.focused_list_box = self.list_box_food
+
 
   def seize(self):
     surface = pygame.display.get_surface()
@@ -37,11 +57,23 @@ class Inventory:
         return # exit inventory screen
 
       elif event.type == pygame.KEYUP and event.key == pygame.K_UP:
-        self.list_box_food.select_previous_item()
+        self.focused_list_box.select_previous_item()
         need_redraw = True
 
       elif event.type == pygame.KEYUP and event.key == pygame.K_DOWN:
-        self.list_box_food.select_next_item()
+        self.focused_list_box.select_next_item()
+        need_redraw = True
+
+      elif event.type == pygame.KEYUP and event.key == pygame.K_TAB:
+        # obviously requires more work as we add more to the screen
+        if self.focused_list_box == self.list_box_food:
+          self.list_box_food.set_focus(False)
+          self.list_box_bombs.set_focus()
+          self.focused_list_box = self.list_box_bombs
+        else:
+          self.list_box_food.set_focus()
+          self.list_box_bombs.set_focus(False)
+          self.focused_list_box = self.list_box_food
         need_redraw = True
 
       # TODO: handle resize
@@ -59,3 +91,4 @@ class Inventory:
 
     # draw controls
     self.list_box_food.draw(surface)
+    self.list_box_bombs.draw(surface)
