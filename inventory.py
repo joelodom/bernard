@@ -94,17 +94,12 @@ class Inventory:
 
   def draw(self, surface):
     # update the text box text
-
-    verbose_text = self.focused_control.get_verbose_text()
-    if verbose_text == None:
-      verbose_text = ""
-
+    self.descriptive_text_box.set_text(self.focused_control.get_verbose_text())
     short_text = self.focused_control.get_short_text()
-    if short_text == None:
-      short_text = ""
-
-    self.descriptive_text_box.set_text(verbose_text)
-    self.action_text_box.set_text("Press [ENTER] to select %s" % short_text)
+    if short_text != None:
+      self.action_text_box.set_text("Press [ENTER] to select %s" % short_text)
+    else:
+      self.action_text_box.set_text("")
 
     # draw a background and a border
     (surface_width, surface_height) = surface.get_size()

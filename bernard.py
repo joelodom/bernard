@@ -595,6 +595,10 @@ def run_level(constants, screen, player, mazes, maze_objects):
       sounds.stop_all_sounds()
       inventory.Inventory(player).seize()
 
+    # handle food key
+    elif event.type == pygame.KEYUP and event.key == pygame.K_f:
+      player.use_selected_food()
+
     # handle pause key
     elif event.type == pygame.KEYUP and event.key == pygame.K_p:
       draw_centered_message(screen, "Paused")
