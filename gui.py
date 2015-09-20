@@ -15,7 +15,9 @@ SELECTED_BORDER_Y_SPACING = 2 # pixles
 
 
 class ListBoxItem:
-  pass
+  def __init__(self, short_text, verbose_text):
+    self.short_text = short_text
+    self.verbose_text = verbose_text
 
 
 class ListBox:
@@ -46,6 +48,9 @@ class ListBox:
     if self.selected_item > 0:
       self.selected_item -= 1
 
+  def get_verbose_text(self):
+    return self.items[self.selected_item].verbose_text
+
   def draw(self, surface):
 
     font = pygame.font.SysFont("monospace", 20)
@@ -72,8 +77,8 @@ class ListBox:
 
       # draw the item text
 
-      rendered = font.render(item.TEXT, True, colors.SOLID_WHITE)
-      (rendered_width, rendered_height) = font.size(item.TEXT)
+      rendered = font.render(item.short_text, True, colors.SOLID_WHITE)
+      (rendered_width, rendered_height) = font.size(item.short_text)
       self.surface.blit(rendered, (place_item_text_x, place_item_text_y))
 
       # draw a box around the selected item if we have focus
@@ -99,6 +104,39 @@ class ListBox:
     if self.title != None:
       rendered = font.render(self.title, True, colors.SOLID_WHITE, colors.SOLID_BLACK)
       self.surface.blit(rendered, (TITLE_X_INDENT, 0))
+
+    # blit to input surface
+    surface.blit(self.surface, (self.x, self.y))
+
+
+class TextBox:
+  def __init__(self, x, y, width, height, text = ""):
+    self.x = x
+    self.y = y
+    self.surface = pygame.Surface((width, height))
+    self.set_text(text)
+
+  def set_text(self, text):
+    self.text = text
+
+  def draw(self, surface):
+
+    font = pygame.font.SysFont("monospace", 20)
+    (my_width, my_height) = self.surface.get_size()
+
+    # draw the background
+
+    pygame.draw.rect(self.surface, colors.SOLID_BLACK, (0, 0, my_width, my_height))
+
+    # draw the text
+
+    font = pygame.font.SysFont("monospace", 20)
+    rendered = font.render(self.text, True, colors.SOLID_WHITE)
+    self.surface.blit(rendered, (10, 10))
+
+    # draw a border around the control
+
+    pygame.draw.rect(self.surface, colors.SOLID_WHITE, (0, 0, my_width, my_height), BORDER_WIDTH)
 
     # blit to input surface
     surface.blit(self.surface, (self.x, self.y))

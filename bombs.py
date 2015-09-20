@@ -21,6 +21,7 @@ class Bomb:
 
 class CherryBomb(Bomb):
   NAME = 'Cherry Bomb'
+  DESCRIPTION = 'Don\'t blow off your finger.'
   BLAST_RADIUS = 1
   time_remaining = 3
 
@@ -33,6 +34,7 @@ class CherryBomb(Bomb):
 
 class Dynamite(Bomb):
   NAME = 'Dynamite'
+  DESCRIPTION = 'Fire in the hole!'
   BLAST_RADIUS = 3
   time_remaining = 5
 
@@ -45,6 +47,7 @@ class Dynamite(Bomb):
 
 class AtomBomb(Bomb):
   NAME = 'Atom Bomb'
+  DESCRIPTION = 'I am become Death, the destroyer of worlds.'
   BLAST_RADIUS = 10
   time_remaining = 20
 
