@@ -6,7 +6,8 @@ import colors
 
 # tunables
 
-BORDER_WIDTH = 3
+UNFOCUSED_BORDER_WIDTH = 1
+FOCUSED_BORDER_WIDTH = 3
 
 TITLE_X_INDENT = 10 # pixles
 
@@ -22,13 +23,16 @@ class ListBoxItem:
     self.associated_object = associated_object
 
 
+NO_SELECTED_ITEM = -1
+
+
 class ListBox:
   def __init__(self, x, y, width, height, title = None):
     self.x = x
     self.y = y
     self.surface = pygame.Surface((width, height))
     self.items = []
-    self.selected_item = 0
+    self.selected_item = NO_SELECTED_ITEM
     self.title = title
     self.focused = False
 
@@ -36,27 +40,34 @@ class ListBox:
     self.focused = focused
 
   def add_item(self, item):
-    '''Adds an item to the listbox.
-
-    Items must have the following properties: TEXT.
-    '''
     self.items.append(item)
+    self.selected_item = 0 # this currently assumes that items are added before drawing / using
 
   def select_next_item(self):
+    if self.selected_item == NO_SELECTED_ITEM:
+      return
     if self.selected_item < len(self.items) - 1:
       self.selected_item += 1
 
   def select_previous_item(self):
+    if self.selected_item == NO_SELECTED_ITEM:
+      return
     if self.selected_item > 0:
       self.selected_item -= 1
 
   def get_short_text(self):
+    if self.selected_item == NO_SELECTED_ITEM:
+      return None
     return self.items[self.selected_item].short_text
 
   def get_verbose_text(self):
+    if self.selected_item == NO_SELECTED_ITEM:
+      return None
     return self.items[self.selected_item].verbose_text
 
   def get_associated_object(self):
+    if self.selected_item == NO_SELECTED_ITEM:
+      return None
     return self.items[self.selected_item].associated_object
 
   def draw(self, surface):
@@ -65,7 +76,6 @@ class ListBox:
     (my_width, my_height) = self.surface.get_size()
 
     # draw the background
-
     pygame.draw.rect(self.surface, colors.SOLID_BLACK, (0, 0, my_width, my_height))
 
     # calculate title sizes
@@ -95,7 +105,7 @@ class ListBox:
         pygame.draw.rect(self.surface, colors.SOLID_BLUE,
           (SELECTED_BORDER_X_INDENT, place_item_text_y - SELECTED_BORDER_Y_SPACING,
           my_width - 2*SELECTED_BORDER_X_INDENT, rendered_height + 2*SELECTED_BORDER_Y_SPACING),
-          BORDER_WIDTH)
+          FOCUSED_BORDER_WIDTH)
 
       # go to the next item
 
@@ -103,9 +113,9 @@ class ListBox:
       current_item += 1
 
     # draw a border around the control
-
     pygame.draw.rect(self.surface, colors.SOLID_WHITE,
-      (0, round(title_height/2), my_width, my_height - round(title_height/2)), BORDER_WIDTH)
+      (0, round(title_height/2), my_width, my_height - round(title_height/2)),
+      FOCUSED_BORDER_WIDTH if self.focused else UNFOCUSED_BORDER_WIDTH)
 
     # draw the title
 
@@ -133,22 +143,21 @@ class TextBox:
     (my_width, my_height) = self.surface.get_size()
 
     # draw the background
-
     pygame.draw.rect(self.surface, colors.SOLID_BLACK, (0, 0, my_width, my_height))
 
     # draw the text line by line
 
-    current_y = TEXT_BOX_LINE_SPACING;
-
-    for line in self.text.splitlines():
-      rendered = font.render(line, True, colors.SOLID_WHITE)
-      (rendered_width, rendered_height) = font.size(line)
-      self.surface.blit(rendered, (10, current_y))
-      current_y += TEXT_BOX_LINE_SPACING + rendered_height
+    if self.text != None:
+      current_y = TEXT_BOX_LINE_SPACING;
+      for line in self.text.splitlines():
+        rendered = font.render(line, True, colors.SOLID_WHITE)
+        (rendered_width, rendered_height) = font.size(line)
+        self.surface.blit(rendered, (10, current_y))
+        current_y += TEXT_BOX_LINE_SPACING + rendered_height
 
     # draw a border around the control
-
-    pygame.draw.rect(self.surface, colors.SOLID_WHITE, (0, 0, my_width, my_height), BORDER_WIDTH)
+    pygame.draw.rect(self.surface, colors.SOLID_WHITE, (0, 0, my_width, my_height),
+      UNFOCUSED_BORDER_WIDTH)
 
     # blit to input surface
     surface.blit(self.surface, (self.x, self.y))

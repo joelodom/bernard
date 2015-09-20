@@ -78,10 +78,11 @@ class Inventory:
         need_redraw = True
 
       elif event.type == pygame.KEYUP and event.key == pygame.K_RETURN:
+        # these may be set to None, which is okay
         if self.focused_control == self.list_box_food:
-          self.player.set_selected_food(self.list_box_food.get_associated_object())
+          self.player.selected_food = self.list_box_food.get_associated_object()
         else:
-          self.player.set_selected_bomb(self.list_box_bombs.get_associated_object())
+          self.player.selected_bomb = self.list_box_bombs.get_associated_object()
         return # exit inventory screen
 
 
@@ -93,9 +94,17 @@ class Inventory:
 
   def draw(self, surface):
     # update the text box text
-    self.descriptive_text_box.set_text(self.focused_control.get_verbose_text())
-    self.action_text_box.set_text(
-      "Press [ENTER] to select %s" % self.focused_control.get_short_text())
+
+    verbose_text = self.focused_control.get_verbose_text()
+    if verbose_text == None:
+      verbose_text = ""
+
+    short_text = self.focused_control.get_short_text()
+    if short_text == None:
+      short_text = ""
+
+    self.descriptive_text_box.set_text(verbose_text)
+    self.action_text_box.set_text("Press [ENTER] to select %s" % short_text)
 
     # draw a background and a border
     (surface_width, surface_height) = surface.get_size()
