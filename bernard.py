@@ -16,6 +16,7 @@ import bombs
 import sounds
 import images
 import inventory
+import chest
 
 
 # tunables
@@ -37,6 +38,9 @@ WALL_WIDTH_DIVISOR = 7 # larger divisor means thinner walls
 
 NUMBER_OF_MONSTERS = 1
 MONSTER_DENSITY = 0.02 # number of monsters per cell
+
+NUMBER_OF_CHESTS = 1
+CHEST_DENSITY = 1/10 # One chest every 400 cells
 
 CLOCK_TICK_MS = 500 # one unit of game time
 WEAPON_TICK_MS = 100 # for weapon firing redraws and discharge
@@ -231,7 +235,7 @@ def apply_bomb_damage(bomb, player, monsters_in_maze, maze, constants):
 
 
 def build_sprite_surface(
-  constants, monsters_in_maze, weapons, weapon_is_firing, player, bomb, maze):
+  constants, monsters_in_maze, weapons, weapon_is_firing, player, bomb, maze, chests_in_maze):
 
   # initialize the sprite surface
   sprite_surface = pygame.Surface(
@@ -241,6 +245,9 @@ def build_sprite_surface(
 
   # draw monsters
   monsters_in_maze.draw(sprite_surface)
+
+  # draw chest
+  chests_in_maze.draw(sprite_surface)
 
   # draw bomb
   if bomb != None:
@@ -359,6 +366,7 @@ class Constants: # constants change with change in level or screen size
     self.MAZE_WIDTH = BASE_MAZE_WIDTH + MAZE_LEVEL_INCREASE*level
     self.MAZE_HEIGHT = BASE_MAZE_HEIGHT + MAZE_LEVEL_INCREASE*level
     self.NUMBER_OF_MONSTERS = round(MONSTER_DENSITY * self.MAZE_WIDTH * self.MAZE_HEIGHT)
+    self.NUMBER_OF_CHESTS = int(CHEST_DENSITY * self.MAZE_WIDTH * self.MAZE_HEIGHT)
     self.screen_changed(screen) # recalculate screen constants
 
   def screen_changed(self, screen):
@@ -379,6 +387,9 @@ def run_level(constants, screen, player, mazes):
 
   # populate with monsters
   monsters_in_maze = monsters.MonstersInMaze(constants, player.x, player.y)
+
+  # populate with chests
+  chests_in_maze = chest.ChestsInMaze(constants)
 
   # build static surfaces
   background_surface = build_background_surface(constants)
@@ -402,7 +413,7 @@ def run_level(constants, screen, player, mazes):
   while True:
     # build dynamic surfaces
     sprite_surface = build_sprite_surface(
-      constants, monsters_in_maze, weapons, weapon_is_firing, player, bomb, maze)
+      constants, monsters_in_maze, weapons, weapon_is_firing, player, bomb, maze, chests_in_maze)
     lantern_surface = build_lantern_surface(constants, player)
     info_surface = build_info_surface(constants, player, bomb)
 

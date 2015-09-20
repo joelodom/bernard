@@ -41,7 +41,7 @@ def list_food():
 
 def test_list_food():
   for food in list_food():
-    assert(food.HEALTH_HEAL > 0, 'missing HEALTH_HEAL')
+    assert food.HEALTH_HEAL > 0, 'missing HEALTH_HEAL'
 
 def run_tests(constants):
   test_list_food()

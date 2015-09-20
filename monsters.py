@@ -96,7 +96,7 @@ class MonstersInMaze:
     # populate the maze with random monsters
     self.monsters = []
     while len(self.monsters) < self.constants.NUMBER_OF_MONSTERS:
-      if random.randint(0, 2) == 0:
+      if random.randint(0, 3) == 0:
         self.monsters.append(Ghost(self.constants, avoid_x, avoid_y))
       else:
         self.monsters.append(Rat(self.constants, avoid_x, avoid_y))
