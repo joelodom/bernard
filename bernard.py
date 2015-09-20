@@ -1,4 +1,4 @@
-# Copyright (c) 2013 by Joel Odom & Alex Odom, Marietta, GA All Rights Reserved
+# Copyright (c) 2013-2015 by Joel Odom & Alex Odom, Marietta, GA All Rights Reserved
 
 import pygame
 import sys
@@ -16,6 +16,7 @@ import bombs
 import sounds
 import images
 import inventory
+import gui
 
 
 # tunables
@@ -56,6 +57,11 @@ CHARGE_BAR_RELATIVE_Y = HEALTH_BAR_RELATIVE_Y + HEALTH_BAR_RELATIVE_HEIGHT + 0.0
 CHARGE_BAR_RELATIVE_WIDTH = HEALTH_BAR_RELATIVE_WIDTH
 CHARGE_BAR_RELATIVE_HEIGHT = HEALTH_BAR_RELATIVE_HEIGHT
 CHARGE_BAR_OUTLINE_WIDTH = HEALTH_BAR_OUTLINE_WIDTH # pixels
+
+SELECTED_ITEMS_BOX_RELATIVE_X = 0.3
+SELECTED_ITEMS_BOX_RELATIVE_Y = 0.02
+SELECTED_ITEMS_BOX_RELATIVE_WIDTH = 0.5
+SELECTED_ITEMS_BOX_RELATIVE_HEIGHT = 0.07
 
 MESSAGE_FONT_DIVISOR = 25 # smaller number means bigger font
 
@@ -327,6 +333,24 @@ def build_info_surface(constants, player, bomb):
     int(fraction_charge_remaining*CHARGE_BAR_RELATIVE_WIDTH*constants.SCREEN_WIDTH),
     int(CHARGE_BAR_RELATIVE_HEIGHT*constants.SCREEN_HEIGHT)))
 
+  # draw the text box with the selected items
+
+  selected_food = player.get_selected_food()
+  selected_food_name = 'NONE' if selected_food == None else selected_food.NAME
+
+  selected_bomb = player.get_selected_bomb()
+  selected_bomb_name = 'NONE' if selected_bomb == None else selected_bomb.NAME
+
+  selected_items_text = 'Selected Food: %s\nSelected Bomb: %s' % (
+    selected_food_name, selected_bomb_name);
+  selected_items_box = gui.TextBox(
+    int(SELECTED_ITEMS_BOX_RELATIVE_X*constants.SCREEN_WIDTH),
+    int(SELECTED_ITEMS_BOX_RELATIVE_Y*constants.SCREEN_HEIGHT),
+    int(SELECTED_ITEMS_BOX_RELATIVE_WIDTH*constants.SCREEN_WIDTH),
+    int(SELECTED_ITEMS_BOX_RELATIVE_HEIGHT*constants.SCREEN_HEIGHT),
+    selected_items_text)
+  selected_items_box.draw(info_surface)
+
   return info_surface
 
 
@@ -594,6 +618,11 @@ def run_level(constants, screen, player, mazes):
         return None # no next level
 
 
+def exit_program():
+  pygame.quit()
+  sys.exit()
+
+
 def main():
   # check the Python version so that We don't end up with strange behavior
   version = sys.version_info
@@ -644,9 +673,7 @@ def main():
       player.facing = 0 # north
     level = next_level
 
-  # shutdown pygame
-  pygame.quit()
-  sys.exit()
+  exit_program()
 
 
 if __name__ == '__main__':
