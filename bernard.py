@@ -64,7 +64,10 @@ SELECTED_ITEMS_BOX_RELATIVE_Y = 0.005
 SELECTED_ITEMS_BOX_RELATIVE_WIDTH = 0.38
 SELECTED_ITEMS_BOX_RELATIVE_HEIGHT = 0.06
 
-MESSAGE_FONT_DIVISOR = 25 # smaller number means bigger font
+LARGE_MESSAGE_FONT_DIVISOR = 25 # smaller number means bigger font
+SMALL_MESSAGE_FONT_DIVISOR = 60
+
+SMALL_MESSAGE_RELATIVE_Y = 0.9
 
 MAX_WEAPON_CHARGE = 10
 
@@ -76,7 +79,7 @@ WEAPON_TICK_EVENT = pygame.USEREVENT + 2
 def draw_centered_text(surface, message):
   '''Draws a centered message on any surface.'''
   (surface_width, surface_height) = surface.get_size()
-  size = (surface_width + surface_height)//MESSAGE_FONT_DIVISOR
+  size = (surface_width + surface_height)//LARGE_MESSAGE_FONT_DIVISOR
   font = pygame.font.SysFont("monospace", size, bold=True)
   rendered_text = font.render(message, True, colors.SOLID_RED)
   (width, height) = font.size(message)
@@ -91,6 +94,20 @@ def draw_centered_message(screen, message):
   '''
   draw_centered_text(screen, message)
   pygame.display.update()
+
+
+def draw_small_message(surface, message):
+  '''Draws a small message on the given surface.
+
+  Use this function to draw a small message on the game screen.  A display update
+  is required after calling as this is intended to be used inside the normal drawing loop.'''
+
+  (surface_width, surface_height) = surface.get_size()
+  size = (surface_width + surface_height)//SMALL_MESSAGE_FONT_DIVISOR
+  font = pygame.font.SysFont("monospace", size, bold=True)
+  rendered_text = font.render(message, True, colors.SOLID_RED)
+  (width, height) = font.size(message)
+  surface.blit(rendered_text, ((surface_width - width)//2, surface_height*SMALL_MESSAGE_RELATIVE_Y))
 
 
 def build_background_surface(constants):
@@ -302,7 +319,8 @@ def build_lantern_surface(constants, player):
   return lantern_surface
 
 
-def build_info_surface(constants, player, bomb):
+def build_info_surface(constants, player, bomb, objects_in_maze):
+
   # start with a transparent surface
   info_surface = pygame.Surface(
     (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
@@ -361,6 +379,11 @@ def build_info_surface(constants, player, bomb):
     int(SELECTED_ITEMS_BOX_RELATIVE_HEIGHT*constants.SCREEN_HEIGHT),
     selected_items_text)
   selected_items_box.draw(info_surface)
+
+  # draw any small informational messages
+  for chest in objects_in_maze.chests: # update when different kinds of objects are in maze
+    if chest.x == player.x and chest.y == player.y:
+      draw_small_message(info_surface, 'Press [O] to open chest')
 
   return info_surface
 
@@ -449,7 +472,7 @@ def run_level(constants, screen, player, mazes, maze_objects):
     sprite_surface = build_sprite_surface(
       constants, monsters_in_maze, weapons, weapon_is_firing, player, bomb, maze)
     lantern_surface = build_lantern_surface(constants, player)
-    info_surface = build_info_surface(constants, player, bomb)
+    info_surface = build_info_surface(constants, player, bomb, objects_in_maze)
 
     # blit the surfaces to the screen
     screen.blit(background_surface, (0, 0))
