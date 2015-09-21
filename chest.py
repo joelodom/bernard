@@ -2,6 +2,7 @@
 
 import random
 import images
+import food
 
 TIER_1 = '1'
 TIER_1_LOCKED = '1l'
@@ -19,7 +20,21 @@ class Chest:
     elif self.TIER == TIER_1_LOCKED:
       self.IMAGE = images.TIER_1_LOCKED_CHEST
 
-    # set location randomly
+    #
+    # Chest contents require the following attributes: MIN_LEVEL
+    # Additionally, the prototype constructor should take no parameters.
+    #
+
+    self.contents = []
+    possible_contents = food.list_food()
+    for i in range(3):
+      item_prototype = random.choice(possible_contents)
+      if item_prototype.MIN_LEVEL > constants.LEVEL: continue
+      self.contents.append(type(item_prototype)())
+
+
+    # set location randomly, but avoid stairs
+    # NOTE (maybe TODO): there could be multiple chests at the same location
 
     while True:
       self.x = random.randint(0, self.constants.MAZE_WIDTH - 1)

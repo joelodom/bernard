@@ -7,12 +7,13 @@ import images
 
 
 class Monster:
-  def __init__(self, constants, avoid_x, avoid_y):
+  def __init__(self, constants, avoid_x = None, avoid_y = None):
     self.constants = constants
 
     # defaults
     self.DAMAGE = 1
     self.IMAGE = None
+    self.MIN_LEVEL = 1
 
     # the monster will run away while it is scared
     self.scared_ticks = 0 # ticks remaining
@@ -22,27 +23,32 @@ class Monster:
     self.x = random.randint(0, self.constants.MAZE_WIDTH - 1)
     self.y = random.randint(0, self.constants.MAZE_HEIGHT - 1)
 
-    while abs(self.x - avoid_x) <= self.constants.MONSTER_BUFFER_SIZE:
-      self.x = random.randint(0, self.constants.MAZE_WIDTH - 1)
-    while abs(self.y - avoid_y) <= self.constants.MONSTER_BUFFER_SIZE:
-      self.y = random.randint(0, self.constants.MAZE_HEIGHT - 1)
+    if avoid_x != None:
+      while abs(self.x - avoid_x) <= self.constants.MONSTER_BUFFER_SIZE:
+        self.x = random.randint(0, self.constants.MAZE_WIDTH - 1)
+
+    if avoid_y != None:
+      while abs(self.y - avoid_y) <= self.constants.MONSTER_BUFFER_SIZE:
+        self.y = random.randint(0, self.constants.MAZE_HEIGHT - 1)
 
   def may_move(self, maze, direction):
     return not maze.get_walls(self.x, self.y)[direction]
 
 
 class Rat(Monster):
-  def __init__(self, constants, avoid_x, avoid_y):
+  def __init__(self, constants, avoid_x = None, avoid_y = None):
     super(Rat, self).__init__(constants, avoid_x, avoid_y)
     self.DAMAGE = 1
     self.IMAGE = images.RAT
+    self.MIN_LEVEL = 1
 
 
 class Ghost(Monster):
-  def __init__(self, constants, avoid_x, avoid_y):
+  def __init__(self, constants, avoid_x = None, avoid_y = None):
     super(Ghost, self).__init__(constants, avoid_x, avoid_y)
     self.DAMAGE = 2
     self.IMAGE = images.GHOST
+    self.MIN_LEVEL = 5
 
   def may_move(self, maze, direction):
     if direction == 0:
@@ -93,11 +99,11 @@ class MonstersInMaze:
 
     # populate the maze with random monsters
     self.monsters = []
+    possible_monsters = list_monsters(constants)
     while len(self.monsters) < self.constants.NUMBER_OF_MONSTERS:
-      if random.randint(0, 3) == 0:
-        self.monsters.append(Ghost(self.constants, avoid_x, avoid_y))
-      else:
-        self.monsters.append(Rat(self.constants, avoid_x, avoid_y))
+      monster_prototype = random.choice(possible_monsters)
+      if monster_prototype.MIN_LEVEL > constants.LEVEL: continue
+      self.monsters.append(type(monster_prototype)(constants, avoid_x, avoid_y))
 
   def draw(self, surface):
     cell_width = self.constants.SCREEN_WIDTH//self.constants.MAZE_WIDTH
@@ -187,9 +193,18 @@ class MonstersInMaze:
     return monsters
 
 
+def list_monsters(constants):
+  return ( Rat(constants), Ghost(constants) )
+
+
 #
 # TESTS
 #
+
+def test_list_monsters(constants): # also tests parameters
+  for monster in list_monsters(constants):
+    assert monster.DAMAGE > 0, 'bad monster DAMAGE'
+    assert monster.MIN_LEVEL > 0, 'bad monster MIN_LEVEL'
 
 def test_monster_count(constants):
   maze = third_party.maze.Maze(
@@ -198,7 +213,7 @@ def test_monster_count(constants):
   assert len(monsters_in_maze.monsters) == constants.NUMBER_OF_MONSTERS, (
     'monster count failed')
 
-def test_moster_buffer(constants):
+def test_monster_buffer(constants):
   maze = third_party.maze.Maze(
     width = constants.MAZE_WIDTH, height = constants.MAZE_HEIGHT)
   AVOID_X = 15
@@ -210,14 +225,7 @@ def test_moster_buffer(constants):
     assert abs(monster.y - AVOID_Y) > constants.MONSTER_BUFFER_SIZE, (
       'monster buffer test failed')
 
-def test_monster_parameters(constants):
-  maze = third_party.maze.Maze(
-    width = constants.MAZE_WIDTH, height = constants.MAZE_HEIGHT)
-  monsters_in_maze = MonstersInMaze(constants, 0, 0)
-  for monster in monsters_in_maze.monsters:
-    assert monster.DAMAGE > 0, ('bad monster DAMAGE')
-
 def run_tests(constants):
   test_monster_count(constants)
-  test_moster_buffer(constants)
-  test_monster_parameters(constants)
+  test_monster_buffer(constants)
+  test_list_monsters(constants)

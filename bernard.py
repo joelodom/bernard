@@ -327,6 +327,13 @@ def player_is_on_down_stairs(player, constants):
   return player.x == constants.MAZE_WIDTH - 1 and player.y == constants.MAZE_HEIGHT - 1
 
 
+def get_chest_at_player_location(player, objects_in_maze):
+  for c in objects_in_maze.chests:
+    if c.x == player.x and c.y == player.y:
+      return c # only returns first chest if there are more than one at same location
+  return None
+
+
 def build_info_surface(constants, player, bomb, objects_in_maze):
 
   # start with a transparent surface
@@ -389,15 +396,12 @@ def build_info_surface(constants, player, bomb, objects_in_maze):
   selected_items_box.draw(info_surface)
 
   # draw small informational messages
-
   if player_is_on_up_stairs(player, constants):
     draw_small_message(info_surface, 'Press [U] to ascend')
   elif player_is_on_down_stairs(player, constants):
     draw_small_message(info_surface, 'Press [D] to descend')
-  else:
-    for chest in objects_in_maze.chests: # update when different kinds of objects are in maze
-      if chest.x == player.x and chest.y == player.y:
-        draw_small_message(info_surface, 'Press [O] to open chest')
+  elif get_chest_at_player_location(player, objects_in_maze) != None:
+    draw_small_message(info_surface, 'Press [O] to open chest')
 
   return info_surface
 
@@ -634,6 +638,15 @@ def run_level(constants, screen, player, mazes, maze_objects):
     # handle food key
     elif event.type == pygame.KEYUP and event.key == pygame.K_f:
       player.use_selected_food()
+
+    # handle open key
+    elif event.type == pygame.KEYUP and event.key == pygame.K_o:
+      # TODO UNDER CONSTRUCTION: just give the player the chest contents
+      c = get_chest_at_player_location(player, objects_in_maze)
+      if c != None:
+        player.food.extend(c.contents)
+        objects_in_maze.chests.remove(c)
+        objects_surface = build_objects_surface(objects_in_maze, constants)
 
     # handle pause key
     elif event.type == pygame.KEYUP and event.key == pygame.K_p:
