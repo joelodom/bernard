@@ -3,13 +3,21 @@
 import random
 import images
 
+TIER_1 = '1'
+TIER_1_LOCKED = '1l'
+
 class Chest:
   def __init__(self, constants):
+
     self.constants = constants
 
-    #defaults
-    self.get_tier()
-    self.get_image()
+    self.TIER = random.choice(
+      [TIER_1, TIER_1, TIER_1, TIER_1, TIER_1, TIER_1_LOCKED, TIER_1_LOCKED])
+
+    if self.TIER == TIER_1:
+      self.IMAGE = images.TIER_1_CHEST
+    elif self.TIER == TIER_1_LOCKED:
+      self.IMAGE = images.TIER_1_LOCKED_CHEST
 
     # set location randomly
 
@@ -21,15 +29,6 @@ class Chest:
       if self.x == self.constants.MAZE_WIDTH - 1 and self.y == self.constants.MAZE_HEIGHT - 1:
         continue
       break
-
-  def get_tier(self):
-    self.TIER = random.choice(['1', '1', '1', '1', '1', '1l', '1l'])
-
-  def get_image(self):
-    if self.TIER == '1':
-      self.IMAGE = images.TIER_1_CHEST
-    elif self.TIER == '1l':
-      self.IMAGE = images.TIER_1_LOCKED_CHEST
 
 
 class ChestsInMaze:

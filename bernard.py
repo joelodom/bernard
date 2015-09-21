@@ -319,6 +319,14 @@ def build_lantern_surface(constants, player):
   return lantern_surface
 
 
+def player_is_on_up_stairs(player, constants):
+  return constants.LEVEL > 1 and player.x == 0 and player.y == 0
+
+
+def player_is_on_down_stairs(player, constants):
+  return player.x == constants.MAZE_WIDTH - 1 and player.y == constants.MAZE_HEIGHT - 1
+
+
 def build_info_surface(constants, player, bomb, objects_in_maze):
 
   # start with a transparent surface
@@ -380,10 +388,16 @@ def build_info_surface(constants, player, bomb, objects_in_maze):
     selected_items_text)
   selected_items_box.draw(info_surface)
 
-  # draw any small informational messages
-  for chest in objects_in_maze.chests: # update when different kinds of objects are in maze
-    if chest.x == player.x and chest.y == player.y:
-      draw_small_message(info_surface, 'Press [O] to open chest')
+  # draw small informational messages
+
+  if player_is_on_up_stairs(player, constants):
+    draw_small_message(info_surface, 'Press [U] to ascend')
+  elif player_is_on_down_stairs(player, constants):
+    draw_small_message(info_surface, 'Press [D] to descend')
+  else:
+    for chest in objects_in_maze.chests: # update when different kinds of objects are in maze
+      if chest.x == player.x and chest.y == player.y:
+        draw_small_message(info_surface, 'Press [O] to open chest')
 
   return info_surface
 
@@ -571,7 +585,7 @@ def run_level(constants, screen, player, mazes, maze_objects):
 
     elif event.type == pygame.KEYUP and event.key == pygame.K_d:
       # must be on stairs down
-      if player.x == constants.MAZE_WIDTH - 1 and player.y == constants.MAZE_HEIGHT - 1:
+      if player_is_on_down_stairs(player, constants):
         next_level = (constants.LEVEL + 1)
         draw_centered_message(screen, "Going to Level %s" % next_level)
         sounds.stop_all_sounds()
@@ -580,13 +594,12 @@ def run_level(constants, screen, player, mazes, maze_objects):
 
     elif event.type == pygame.KEYUP and event.key == pygame.K_u:
       # must be on stairs up
-      if player.x == 0 and player.y == 0:
+      if player_is_on_up_stairs(player, constants):
         next_level = (constants.LEVEL - 1)
-        if next_level > 0:
-          draw_centered_message(screen, "Going to Level %s" % next_level)
-          sounds.stop_all_sounds()
-          pause(2000)
-          return next_level
+        draw_centered_message(screen, "Going to Level %s" % next_level)
+        sounds.stop_all_sounds()
+        pause(2000)
+        return next_level
 
     # handle test key
     elif event.type == pygame.KEYUP and event.key == pygame.K_F12:
