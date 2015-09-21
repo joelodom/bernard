@@ -38,7 +38,7 @@ WALL_COLOR = colors.SOLID_WHITE
 WALL_WIDTH_DIVISOR = 7 # larger divisor means thinner walls
 
 MONSTER_DENSITY = 0.02
-CHEST_DENSITY = 0.01
+CHEST_DENSITY = 0.005
 
 CLOCK_TICK_MS = 500 # one unit of game time
 WEAPON_TICK_MS = 100 # for weapon firing redraws and discharge
@@ -436,6 +436,7 @@ class Constants: # constants change with change in level or screen size
     self.MAZE_HEIGHT = BASE_MAZE_HEIGHT + MAZE_LEVEL_INCREASE*level
     self.NUMBER_OF_MONSTERS = round(MONSTER_DENSITY * self.MAZE_WIDTH * self.MAZE_HEIGHT)
     self.NUMBER_OF_CHESTS = round(CHEST_DENSITY * self.MAZE_WIDTH * self.MAZE_HEIGHT)
+    if self.NUMBER_OF_CHESTS < 1: self.NUMBER_OF_CHESTS = 1 # put a chest in early levels
     self.screen_changed(screen) # recalculate screen constants
 
   def screen_changed(self, screen):
@@ -645,6 +646,8 @@ def run_level(constants, screen, player, mazes, maze_objects):
       c = get_chest_at_player_location(player, objects_in_maze)
       if c != None:
         player.food.extend(c.contents)
+        if player.selected_food == None and len(player.food) > 0:
+          player.selected_food = player.food[0]
         objects_in_maze.chests.remove(c)
         objects_surface = build_objects_surface(objects_in_maze, constants)
 

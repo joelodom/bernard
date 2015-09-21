@@ -23,11 +23,7 @@ class Player:
     self.bombs = []
     self.selected_bomb = None
 
-    # for testing only, give the player some stuff
-
-    self.food.extend(food.list_food())
-    self.selected_food = self.food[0]
-
+    # for testing only, give the player some bombs
     self.bombs.extend(bombs.list_bombs(constants))
     self.selected_bomb = self.bombs[0]
 
