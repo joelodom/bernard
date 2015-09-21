@@ -515,23 +515,23 @@ def run_level(constants, screen, player, mazes, maze_objects):
         if player.facing == 0: # north
           for y in range(player.weapon.BEAM_LENGTH + 1):
             weapon_hit_squares.append((player.x, player.y - y))
-            if maze.get_walls(player.x, player.y - y)[0]:
-              break # don't shoot through walls
+            #if maze.get_walls(player.x, player.y - y)[0]:
+            #  break # don't shoot through walls
         elif player.facing == 1: # east
           for x in range(player.weapon.BEAM_LENGTH + 1):
             weapon_hit_squares.append((player.x + x, player.y))
-            if maze.get_walls(player.x + x, player.y)[1]:
-              break # don't shoot through walls
+            #if maze.get_walls(player.x + x, player.y)[1]:
+            #  break # don't shoot through walls
         elif player.facing == 2: # south
           for y in range(player.weapon.BEAM_LENGTH + 1):
             weapon_hit_squares.append((player.x, player.y + y))
-            if maze.get_walls(player.x, player.y + y)[2]:
-              break # don't shoot through walls
+            #if maze.get_walls(player.x, player.y + y)[2]:
+            #  break # don't shoot through walls
         else: # west
           for x in range(player.weapon.BEAM_LENGTH + 1):
             weapon_hit_squares.append((player.x - x, player.y))
-            if maze.get_walls(player.x - x, player.y)[3]:
-              break # don't shoot through walls
+            #if maze.get_walls(player.x - x, player.y)[3]:
+            #  break # don't shoot through walls
 
       # send tick to all monsters
       monsters_in_maze.tick(maze, player, weapon_hit_squares)
