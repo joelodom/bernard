@@ -24,8 +24,12 @@ class Player:
     self.selected_bomb = None
 
     # for testing only, give the player some stuff
+
     self.food.extend(food.list_food())
+    self.selected_food = self.food[0]
+
     self.bombs.extend(bombs.list_bombs(constants))
+    self.selected_bomb = self.bombs[0]
 
   def draw(self, surface):
     images.draw_image_in_cell(self.constants, surface, images.PLAYER, self.x, self.y)
@@ -37,13 +41,13 @@ class Player:
   def use_selected_bomb(self):
     if self.selected_bomb != None:
       self.bombs.remove(self.selected_bomb)
-      self.selected_bomb = None
+      self.selected_bomb = self.bombs[0] if len(self.bombs) > 0 else None
 
   def use_selected_food(self):
     if self.selected_food != None:
       self.food.remove(self.selected_food)
       self.increase_health(self.selected_food.HEALTH_HEAL)
-      self.selected_food = None
+      self.selected_food = self.food[0] if len(self.food) > 0 else None
 
   def increase_health(self, amount):
     self.health += amount
