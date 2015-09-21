@@ -2,16 +2,39 @@
 
 import random
 import images
+import food
+
+TIER_1 = '1'
+TIER_1_LOCKED = '1l'
 
 class Chest:
   def __init__(self, constants):
+
     self.constants = constants
 
-    #defaults
-    self.get_tier()
-    self.get_image()
+    self.TIER = random.choice(
+      [TIER_1, TIER_1, TIER_1, TIER_1, TIER_1, TIER_1_LOCKED, TIER_1_LOCKED])
 
-    # set location randomly
+    if self.TIER == TIER_1:
+      self.IMAGE = images.TIER_1_CHEST
+    elif self.TIER == TIER_1_LOCKED:
+      self.IMAGE = images.TIER_1_LOCKED_CHEST
+
+    #
+    # Chest contents require the following attributes: MIN_LEVEL
+    # Additionally, the prototype constructor should take no parameters.
+    #
+
+    self.contents = []
+    possible_contents = food.list_food()
+    for i in range(3):
+      item_prototype = random.choice(possible_contents)
+      if item_prototype.MIN_LEVEL > constants.LEVEL: continue
+      self.contents.append(type(item_prototype)())
+
+
+    # set location randomly, but avoid stairs
+    # NOTE (maybe TODO): there could be multiple chests at the same location
 
     while True:
       self.x = random.randint(0, self.constants.MAZE_WIDTH - 1)
@@ -21,15 +44,6 @@ class Chest:
       if self.x == self.constants.MAZE_WIDTH - 1 and self.y == self.constants.MAZE_HEIGHT - 1:
         continue
       break
-
-  def get_tier(self):
-    self.TIER = random.choice(['1', '1', '1', '1', '1', '1l', '1l'])
-
-  def get_image(self):
-    if self.TIER == '1':
-      self.IMAGE = images.TIER_1_CHEST
-    elif self.TIER == '1l':
-      self.IMAGE = images.TIER_1_LOCKED_CHEST
 
 
 class ChestsInMaze:

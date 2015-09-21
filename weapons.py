@@ -41,6 +41,7 @@ class Weapon:
           self.BEAM_WIDTH)
         start_point = end_point
 
+
 class MiniBlaster(Weapon):
   def __init__(self, constants):
     super(MiniBlaster, self).__init__(constants)

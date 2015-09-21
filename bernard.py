@@ -38,7 +38,7 @@ WALL_COLOR = colors.SOLID_WHITE
 WALL_WIDTH_DIVISOR = 7 # larger divisor means thinner walls
 
 MONSTER_DENSITY = 0.02
-CHEST_DENSITY = 0.01
+CHEST_DENSITY = 0.005
 
 CLOCK_TICK_MS = 500 # one unit of game time
 WEAPON_TICK_MS = 100 # for weapon firing redraws and discharge
@@ -59,12 +59,15 @@ CHARGE_BAR_RELATIVE_WIDTH = HEALTH_BAR_RELATIVE_WIDTH
 CHARGE_BAR_RELATIVE_HEIGHT = HEALTH_BAR_RELATIVE_HEIGHT
 CHARGE_BAR_OUTLINE_WIDTH = HEALTH_BAR_OUTLINE_WIDTH # pixels
 
-SELECTED_ITEMS_BOX_RELATIVE_X = 0.3
-SELECTED_ITEMS_BOX_RELATIVE_Y = 0.02
-SELECTED_ITEMS_BOX_RELATIVE_WIDTH = 0.5
-SELECTED_ITEMS_BOX_RELATIVE_HEIGHT = 0.07
+SELECTED_ITEMS_BOX_RELATIVE_X = 0.45
+SELECTED_ITEMS_BOX_RELATIVE_Y = 0.005
+SELECTED_ITEMS_BOX_RELATIVE_WIDTH = 0.38
+SELECTED_ITEMS_BOX_RELATIVE_HEIGHT = 0.06
 
-MESSAGE_FONT_DIVISOR = 25 # smaller number means bigger font
+LARGE_MESSAGE_FONT_DIVISOR = 25 # smaller number means bigger font
+SMALL_MESSAGE_FONT_DIVISOR = 60
+
+SMALL_MESSAGE_RELATIVE_Y = 0.9
 
 MAX_WEAPON_CHARGE = 10
 
@@ -76,7 +79,7 @@ WEAPON_TICK_EVENT = pygame.USEREVENT + 2
 def draw_centered_text(surface, message):
   '''Draws a centered message on any surface.'''
   (surface_width, surface_height) = surface.get_size()
-  size = (surface_width + surface_height)//MESSAGE_FONT_DIVISOR
+  size = (surface_width + surface_height)//LARGE_MESSAGE_FONT_DIVISOR
   font = pygame.font.SysFont("monospace", size, bold=True)
   rendered_text = font.render(message, True, colors.SOLID_RED)
   (width, height) = font.size(message)
@@ -91,6 +94,20 @@ def draw_centered_message(screen, message):
   '''
   draw_centered_text(screen, message)
   pygame.display.update()
+
+
+def draw_small_message(surface, message):
+  '''Draws a small message on the given surface.
+
+  Use this function to draw a small message on the game screen.  A display update
+  is required after calling as this is intended to be used inside the normal drawing loop.'''
+
+  (surface_width, surface_height) = surface.get_size()
+  size = (surface_width + surface_height)//SMALL_MESSAGE_FONT_DIVISOR
+  font = pygame.font.SysFont("monospace", size, bold=True)
+  rendered_text = font.render(message, True, colors.SOLID_RED)
+  (width, height) = font.size(message)
+  surface.blit(rendered_text, ((surface_width - width)//2, surface_height*SMALL_MESSAGE_RELATIVE_Y))
 
 
 def build_background_surface(constants):
@@ -302,7 +319,23 @@ def build_lantern_surface(constants, player):
   return lantern_surface
 
 
-def build_info_surface(constants, player, bomb):
+def player_is_on_up_stairs(player, constants):
+  return constants.LEVEL > 1 and player.x == 0 and player.y == 0
+
+
+def player_is_on_down_stairs(player, constants):
+  return player.x == constants.MAZE_WIDTH - 1 and player.y == constants.MAZE_HEIGHT - 1
+
+
+def get_chest_at_player_location(player, objects_in_maze):
+  for c in objects_in_maze.chests:
+    if c.x == player.x and c.y == player.y:
+      return c # only returns first chest if there are more than one at same location
+  return None
+
+
+def build_info_surface(constants, player, bomb, objects_in_maze):
+
   # start with a transparent surface
   info_surface = pygame.Surface(
     (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
@@ -362,6 +395,14 @@ def build_info_surface(constants, player, bomb):
     selected_items_text)
   selected_items_box.draw(info_surface)
 
+  # draw small informational messages
+  if player_is_on_up_stairs(player, constants):
+    draw_small_message(info_surface, 'Press [U] to ascend')
+  elif player_is_on_down_stairs(player, constants):
+    draw_small_message(info_surface, 'Press [D] to descend')
+  elif get_chest_at_player_location(player, objects_in_maze) != None:
+    draw_small_message(info_surface, 'Press [O] to open chest')
+
   return info_surface
 
 
@@ -395,6 +436,7 @@ class Constants: # constants change with change in level or screen size
     self.MAZE_HEIGHT = BASE_MAZE_HEIGHT + MAZE_LEVEL_INCREASE*level
     self.NUMBER_OF_MONSTERS = round(MONSTER_DENSITY * self.MAZE_WIDTH * self.MAZE_HEIGHT)
     self.NUMBER_OF_CHESTS = round(CHEST_DENSITY * self.MAZE_WIDTH * self.MAZE_HEIGHT)
+    if self.NUMBER_OF_CHESTS < 1: self.NUMBER_OF_CHESTS = 1 # put a chest in early levels
     self.screen_changed(screen) # recalculate screen constants
 
   def screen_changed(self, screen):
@@ -449,7 +491,7 @@ def run_level(constants, screen, player, mazes, maze_objects):
     sprite_surface = build_sprite_surface(
       constants, monsters_in_maze, weapons, weapon_is_firing, player, bomb, maze)
     lantern_surface = build_lantern_surface(constants, player)
-    info_surface = build_info_surface(constants, player, bomb)
+    info_surface = build_info_surface(constants, player, bomb, objects_in_maze)
 
     # blit the surfaces to the screen
     screen.blit(background_surface, (0, 0))
@@ -492,23 +534,23 @@ def run_level(constants, screen, player, mazes, maze_objects):
         if player.facing == 0: # north
           for y in range(player.weapon.BEAM_LENGTH + 1):
             weapon_hit_squares.append((player.x, player.y - y))
-            if maze.get_walls(player.x, player.y - y)[0]:
-              break # don't shoot through walls
+            #if maze.get_walls(player.x, player.y - y)[0]:
+            #  break # don't shoot through walls
         elif player.facing == 1: # east
           for x in range(player.weapon.BEAM_LENGTH + 1):
             weapon_hit_squares.append((player.x + x, player.y))
-            if maze.get_walls(player.x + x, player.y)[1]:
-              break # don't shoot through walls
+            #if maze.get_walls(player.x + x, player.y)[1]:
+            #  break # don't shoot through walls
         elif player.facing == 2: # south
           for y in range(player.weapon.BEAM_LENGTH + 1):
             weapon_hit_squares.append((player.x, player.y + y))
-            if maze.get_walls(player.x, player.y + y)[2]:
-              break # don't shoot through walls
+            #if maze.get_walls(player.x, player.y + y)[2]:
+            #  break # don't shoot through walls
         else: # west
           for x in range(player.weapon.BEAM_LENGTH + 1):
             weapon_hit_squares.append((player.x - x, player.y))
-            if maze.get_walls(player.x - x, player.y)[3]:
-              break # don't shoot through walls
+            #if maze.get_walls(player.x - x, player.y)[3]:
+            #  break # don't shoot through walls
 
       # send tick to all monsters
       monsters_in_maze.tick(maze, player, weapon_hit_squares)
@@ -548,7 +590,7 @@ def run_level(constants, screen, player, mazes, maze_objects):
 
     elif event.type == pygame.KEYUP and event.key == pygame.K_d:
       # must be on stairs down
-      if player.x == constants.MAZE_WIDTH - 1 and player.y == constants.MAZE_HEIGHT - 1:
+      if player_is_on_down_stairs(player, constants):
         next_level = (constants.LEVEL + 1)
         draw_centered_message(screen, "Going to Level %s" % next_level)
         sounds.stop_all_sounds()
@@ -557,13 +599,12 @@ def run_level(constants, screen, player, mazes, maze_objects):
 
     elif event.type == pygame.KEYUP and event.key == pygame.K_u:
       # must be on stairs up
-      if player.x == 0 and player.y == 0:
+      if player_is_on_up_stairs(player, constants):
         next_level = (constants.LEVEL - 1)
-        if next_level > 0:
-          draw_centered_message(screen, "Going to Level %s" % next_level)
-          sounds.stop_all_sounds()
-          pause(2000)
-          return next_level
+        draw_centered_message(screen, "Going to Level %s" % next_level)
+        sounds.stop_all_sounds()
+        pause(2000)
+        return next_level
 
     # handle test key
     elif event.type == pygame.KEYUP and event.key == pygame.K_F12:
@@ -598,6 +639,17 @@ def run_level(constants, screen, player, mazes, maze_objects):
     # handle food key
     elif event.type == pygame.KEYUP and event.key == pygame.K_f:
       player.use_selected_food()
+
+    # handle open key
+    elif event.type == pygame.KEYUP and event.key == pygame.K_o:
+      # TODO UNDER CONSTRUCTION: just give the player the chest contents
+      c = get_chest_at_player_location(player, objects_in_maze)
+      if c != None:
+        player.food.extend(c.contents)
+        if player.selected_food == None and len(player.food) > 0:
+          player.selected_food = player.food[0]
+        objects_in_maze.chests.remove(c)
+        objects_surface = build_objects_surface(objects_in_maze, constants)
 
     # handle pause key
     elif event.type == pygame.KEYUP and event.key == pygame.K_p:

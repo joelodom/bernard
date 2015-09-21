@@ -14,6 +14,7 @@ class RottenApple(Food):
     self.HEALTH_HEAL = 3
     self.DESCRIPTION = ('A gross apple with worms in it (Heals '
       + str(self.HEALTH_HEAL) + ' health)')
+    self.MIN_LEVEL = 1
 
 
 class Apple(Food):
@@ -23,6 +24,7 @@ class Apple(Food):
     self.HEALTH_HEAL = 6
     self.DESCRIPTION = ('A good cruchy snack to take along in your travels (Heals '
       + str(self.HEALTH_HEAL) + ' health)')
+    self.MIN_LEVEL = 3
 
 
 class Cake(Food):
@@ -32,6 +34,7 @@ class Cake(Food):
     self.HEALTH_HEAL = 12
     self.DESCRIPTION = ('A perfect thing for a birthday treat (Heals '
       + str(self.HEALTH_HEAL) + ' health)')
+    self.MIN_LEVEL = 6
 
 
 def list_food():
@@ -48,6 +51,7 @@ def test_list_food():
     assert food.COST > 0, 'missing COST'
     assert food.HEALTH_HEAL > 0, 'missing HEALTH_HEAL'
     assert len(food.DESCRIPTION) > 0, 'missing DESCRIPTION'
+    assert len(food.DESCRIPTION) > 0, 'missing MIN_LEVEL'
 
 def run_tests(constants):
   test_list_food()
