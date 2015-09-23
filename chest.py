@@ -27,10 +27,15 @@ class Chest:
 
     self.contents = []
     possible_contents = food.list_food()
-    for i in range(3):
+
+    num_items = 0
+    max_items = random.randint(1, 3) # one to three items per chest
+    while num_items < max_items:
       item_prototype = random.choice(possible_contents)
       if item_prototype.MIN_LEVEL > constants.LEVEL: continue
-      self.contents.append(type(item_prototype)())
+      new_item = type(item_prototype)()
+      self.contents.append(new_item)
+      num_items += 1
 
 
     # set location randomly, but avoid stairs
