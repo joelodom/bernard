@@ -484,6 +484,9 @@ def run_level(constants, screen, player, mazes, maze_objects):
   # keep track of whether or not the player has moved yet
   player_has_moved = False
 
+  # play a song (once for now)
+  sounds.play_a_song()
+
   while True:
     # build dynamic surfaces
     sprite_surface = build_sprite_surface(
