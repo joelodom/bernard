@@ -7,6 +7,7 @@ import food
 import images
 import bombs
 import lanterns
+import weapons
 
 
 class Player:
@@ -25,6 +26,7 @@ class Player:
     self.selected_bomb = None
 
     self.lantern = lanterns.Candle(constants) # a starter lantern
+    self.weapon = weapons.MiniBlaster(constants)
 
   def draw(self, surface):
     images.draw_image_in_cell(self.constants, surface, images.PLAYER, self.x, self.y)

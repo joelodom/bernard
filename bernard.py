@@ -734,9 +734,8 @@ def main():
   level = 1
   constants = Constants(level, screen)
 
-  # instantiate player & set initial weapon
+  # instantiate player
   player = player_module.Player(constants)
-  player.weapon = weapons.MiniBlaster(constants)
 
   # instantiate a dictionary of mazes and their objects
   mazes = {}

@@ -36,10 +36,13 @@ class Inventory:
     self.focused_control = self.list_box_food
 
     # add the descriptive text box
-    self.descriptive_text_box = gui.TextBox(CONTROL_SPACING, 300, 800, 50);
+    self.descriptive_text_box = gui.TextBox(CONTROL_SPACING, 250, 600, 50);
 
     # add the action text box
-    self.action_text_box = gui.TextBox(CONTROL_SPACING, 400, 800, 50);
+    self.action_text_box = gui.TextBox(CONTROL_SPACING, 350, 600, 50);
+
+    # add the text box with the current weapon and lantern
+    self.lw_text_box = gui.TextBox(CONTROL_SPACING, 500, 600, 100);
 
 
   def seize(self):
@@ -94,12 +97,18 @@ class Inventory:
 
   def draw(self, surface):
     # update the text box text
+
     self.descriptive_text_box.set_text(self.focused_control.get_verbose_text())
+
     short_text = self.focused_control.get_short_text()
     if short_text != None:
       self.action_text_box.set_text("Press [ENTER] to select %s" % short_text)
     else:
       self.action_text_box.set_text("")
+
+    weapon_text = 'Weapon: %s' % self.player.weapon.NAME
+    lantern_text = 'Lantern: %s' % self.player.lantern.NAME
+    self.lw_text_box.set_text('%s\n%s' % (weapon_text, lantern_text));
 
     # draw a background and a border
     (surface_width, surface_height) = surface.get_size()
@@ -112,3 +121,5 @@ class Inventory:
     self.list_box_bombs.draw(surface)
     self.descriptive_text_box.draw(surface)
     self.action_text_box.draw(surface)
+    self.lw_text_box.draw(surface)
+    
