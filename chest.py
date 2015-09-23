@@ -3,6 +3,7 @@
 import random
 import images
 import food
+import bombs
 
 TIER_1 = '1'
 TIER_1_LOCKED = '1l'
@@ -22,18 +23,21 @@ class Chest:
 
     #
     # Chest contents require the following attributes: MIN_LEVEL
-    # Additionally, the prototype constructor should take no parameters.
+    # Additionally, the prototype constructor should take one parameter, constants.
     #
 
     self.contents = []
-    possible_contents = food.list_food()
+    possible_contents = []
+    possible_contents.extend(food.list_food(constants))
+    possible_contents.extend(bombs.list_bombs(constants))
 
     num_items = 0
     max_items = random.randint(1, 3) # one to three items per chest
     while num_items < max_items:
       item_prototype = random.choice(possible_contents)
-      if item_prototype.MIN_LEVEL > constants.LEVEL: continue
-      new_item = type(item_prototype)()
+      if item_prototype.MIN_LEVEL > constants.LEVEL:
+        continue
+      new_item = type(item_prototype)(constants)
       self.contents.append(new_item)
       num_items += 1
 

@@ -8,7 +8,7 @@ class Food:
 
 
 class RottenApple(Food):
-  def __init__(self):
+  def __init__(self, constants):
     self.NAME = 'Rotten Apple'
     self.COST = 1
     self.HEALTH_HEAL = 3
@@ -18,7 +18,7 @@ class RottenApple(Food):
 
 
 class Apple(Food):
-  def __init__(self):
+  def __init__(self, constants):
     self.NAME = 'Apple'
     self.COST = 6
     self.HEALTH_HEAL = 6
@@ -28,7 +28,7 @@ class Apple(Food):
 
 
 class Cake(Food):
-  def __init__(self):
+  def __init__(self, constants):
     self.NAME = 'Cake'
     self.COST = 12
     self.HEALTH_HEAL = 12
@@ -37,16 +37,16 @@ class Cake(Food):
     self.MIN_LEVEL = 6
 
 
-def list_food():
-  return ( RottenApple(), Apple(), Cake() )
+def list_food(constants):
+  return ( RottenApple(constants), Apple(constants), Cake(constants) )
 
 
 #
 # TESTS
 #
 
-def test_list_food():
-  for food in list_food():
+def test_list_food(constants):
+  for food in list_food(constants):
     assert len(food.NAME) > 0, 'missing NAME'
     assert food.COST > 0, 'missing COST'
     assert food.HEALTH_HEAL > 0, 'missing HEALTH_HEAL'
@@ -54,4 +54,4 @@ def test_list_food():
     assert len(food.DESCRIPTION) > 0, 'missing MIN_LEVEL'
 
 def run_tests(constants):
-  test_list_food()
+  test_list_food(constants)
