@@ -642,12 +642,10 @@ def run_level(constants, screen, player, mazes, maze_objects):
 
     # handle open key
     elif event.type == pygame.KEYUP and event.key == pygame.K_o:
-      # TODO UNDER CONSTRUCTION: just give the player the chest contents
+      # TODO: for now just give the player the chest contents
       c = get_chest_at_player_location(player, objects_in_maze)
       if c != None:
-        player.food.extend(c.contents)
-        if player.selected_food == None and len(player.food) > 0:
-          player.selected_food = player.food[0]
+        player.give_items(c.contents)
         objects_in_maze.chests.remove(c)
         objects_surface = build_objects_surface(objects_in_maze, constants)
 

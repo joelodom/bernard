@@ -23,6 +23,7 @@ class CherryBomb(Bomb):
   NAME = 'Cherry Bomb'
   DESCRIPTION = 'Don\'t blow off your finger.'
   BLAST_RADIUS = 1
+  MIN_LEVEL = 1
   time_remaining = 3
 
   def __init__(self, constants):
@@ -34,6 +35,7 @@ class Dynamite(Bomb):
   NAME = 'Dynamite'
   DESCRIPTION = 'Fire in the hole!'
   BLAST_RADIUS = 3
+  MIN_LEVEL = 7
   time_remaining = 5
 
   def __init__(self, constants):
@@ -45,6 +47,7 @@ class AtomBomb(Bomb):
   NAME = 'Atom Bomb'
   DESCRIPTION = 'I am become Death, the destroyer of worlds.'
   BLAST_RADIUS = 10
+  MIN_LEVEL = 20
   time_remaining = 20
 
   def __init__(self, constants):

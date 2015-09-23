@@ -23,10 +23,6 @@ class Player:
     self.bombs = []
     self.selected_bomb = None
 
-    # for testing only, give the player some bombs
-    self.bombs.extend(bombs.list_bombs(constants))
-    self.selected_bomb = self.bombs[0]
-
   def draw(self, surface):
     images.draw_image_in_cell(self.constants, surface, images.PLAYER, self.x, self.y)
 
@@ -49,3 +45,14 @@ class Player:
     self.health += amount
     if self.health > self.MAX_HEALTH:
       self.health = self.MAX_HEALTH
+
+  def give_items(self, items):
+    for item in items:
+      if isinstance(item, food.Food):
+        self.food.append(item)
+        if self.selected_food == None and len(self.food) > 0:
+          self.selected_food = self.food[0]
+      elif isinstance(item, bombs.Bomb):
+        self.bombs.append(item)
+        if self.selected_bomb == None and len(self.bombs) >0:
+          self.selected_bomb = self.bombs[0]
