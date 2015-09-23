@@ -19,7 +19,6 @@ import inventory
 import gui
 import chest
 
-
 # tunables
 
 PYTHON_MAJOR_VERSION = 3
@@ -42,8 +41,6 @@ CHEST_DENSITY = 0.005
 
 CLOCK_TICK_MS = 500 # one unit of game time
 WEAPON_TICK_MS = 100 # for weapon firing redraws and discharge
-
-LANTERN_RADIUS = 5 # radius in cells
 
 MONSTER_BUFFER_SIZE = 3 # cells (game may hang if this is too large!)
 
@@ -309,13 +306,14 @@ def build_lantern_surface(constants, player):
     (constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
   lantern_surface = lantern_surface.convert_alpha()
   lantern_surface.fill(colors.SOLID_BLACK)
+  radius = player.lantern.RADIUS
   pygame.draw.ellipse(lantern_surface, colors.TRANSPARENT,
-    (constants.CELL_WIDTH*(player.x - LANTERN_RADIUS)
+    (constants.CELL_WIDTH*(player.x - radius)
       + constants.CELL_WIDTH//2,
-    constants.CELL_HEIGHT*(player.y - LANTERN_RADIUS)
+    constants.CELL_HEIGHT*(player.y - radius)
       + constants.CELL_HEIGHT//2,
-    2*constants.CELL_WIDTH*LANTERN_RADIUS,
-    2*constants.CELL_HEIGHT*LANTERN_RADIUS), 0)
+    2*constants.CELL_WIDTH*radius,
+    2*constants.CELL_HEIGHT*radius), 0)
   return lantern_surface
 
 

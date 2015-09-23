@@ -6,6 +6,7 @@ import sounds
 import food
 import images
 import bombs
+import lanterns
 
 
 class Player:
@@ -22,6 +23,8 @@ class Player:
 
     self.bombs = []
     self.selected_bomb = None
+
+    self.lantern = lanterns.Candle(constants) # a starter lantern
 
   def draw(self, surface):
     images.draw_image_in_cell(self.constants, surface, images.PLAYER, self.x, self.y)
