@@ -24,6 +24,8 @@ def play_a_song():
   global SONG
   if SONG == None:
     SONG = pygame.mixer.Sound(r'resources\bernard.wav')
+  else:
+    SONG.stop()
   SONG.play()
 
 def stop_all_sounds():
@@ -32,5 +34,3 @@ def stop_all_sounds():
   BOMB_COUNTDOWN_SOUND.stop()
   DYNAMITE_SOUND.stop()
   ATOM_BOMB_SOUND.stop()
-  if SONG != None:
-    SONG.stop()

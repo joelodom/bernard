@@ -61,3 +61,7 @@ class Player:
         self.bombs.append(item)
         if self.selected_bomb == None and len(self.bombs) >0:
           self.selected_bomb = self.bombs[0]
+      elif isinstance(item, lanterns.Lantern):
+        # automatically upgrade lantern for now
+        if item.RADIUS > self.lantern.RADIUS:
+          self.lantern = item
