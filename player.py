@@ -6,6 +6,8 @@ import sounds
 import food
 import images
 import bombs
+import lanterns
+import weapons
 
 
 class Player:
@@ -22,6 +24,9 @@ class Player:
 
     self.bombs = []
     self.selected_bomb = None
+
+    self.lantern = lanterns.Candle(constants) # a starter lantern
+    self.weapon = weapons.MiniBlaster(constants)
 
   def draw(self, surface):
     images.draw_image_in_cell(self.constants, surface, images.PLAYER, self.x, self.y)
@@ -56,3 +61,7 @@ class Player:
         self.bombs.append(item)
         if self.selected_bomb == None and len(self.bombs) >0:
           self.selected_bomb = self.bombs[0]
+      elif isinstance(item, lanterns.Lantern):
+        # automatically upgrade lantern for now
+        if item.RADIUS > self.lantern.RADIUS:
+          self.lantern = item

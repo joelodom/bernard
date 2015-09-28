@@ -51,7 +51,7 @@ def test_list_food(constants):
     assert food.COST > 0, 'missing COST'
     assert food.HEALTH_HEAL > 0, 'missing HEALTH_HEAL'
     assert len(food.DESCRIPTION) > 0, 'missing DESCRIPTION'
-    assert len(food.DESCRIPTION) > 0, 'missing MIN_LEVEL'
+    assert food.MIN_LEVEL > 0, 'missing MIN_LEVEL'
 
 def run_tests(constants):
   test_list_food(constants)

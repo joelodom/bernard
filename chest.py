@@ -4,6 +4,7 @@ import random
 import images
 import food
 import bombs
+import lanterns
 
 TIER_1 = '1'
 TIER_1_LOCKED = '1l'
@@ -30,6 +31,7 @@ class Chest:
     possible_contents = []
     possible_contents.extend(food.list_food(constants))
     possible_contents.extend(bombs.list_bombs(constants))
+    possible_contents.extend(lanterns.list_lanterns(constants))
 
     num_items = 0
     max_items = random.randint(1, 3) # one to three items per chest
