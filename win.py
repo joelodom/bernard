@@ -7,6 +7,8 @@ pygame.init()
 
 class Win():
 
+    # TODO: Jack to move copied code (where it makes sense) into a utility class or module
+
     INITIAL_WINDOW_SIZE = 0.9 # percent of screen
     LARGE_MESSAGE_FONT_DIVISOR = 75 # smaller number means bigger font
     info = pygame.display.Info()
@@ -34,8 +36,8 @@ class Win():
       
     def __init__(self):
         self.screen.fill(colors.SOLID_BLACK)
-        self.draw_centered_message(self.screen, "Congradulations! You have won by compleating level 25!")
-        time.sleep(5)
+        self.draw_centered_message(self.screen, "Congradulations! You have won by completing the last level!")
+        time.sleep(5) # sleep for five seconds, eventually we'll exit to main menu or something
         pygame.quit()
         sys.exit()
         
