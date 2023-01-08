@@ -71,12 +71,12 @@ class SuperMegaCannon(Weapon):
     self.DAMAGE = 18
 
 class MultiBlaster(Weapon):
-  def __init__(self,constants):
+  def __init__(self, constants):
     super(MultiBlaster, self).__init__(constants)
 
-    self.COST = 0
+    self.COST = 0 # need to change if it can ever be bought
     self.NAME = 'Multi Blaster'
-    self.DESCRIPTION = 'This wepon shoots 2 beams at once, making the scare time on monsters longer.'
+    self.DESCRIPTION = 'This wepon shoots two beams at once, making the scare time on monsters longer.'
     self.BEAM_LENGTH = 1;
     self.BEAM_WIDTH_STEP = 10
     self.BEAM_SEGMENTS = 5
