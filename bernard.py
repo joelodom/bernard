@@ -714,6 +714,7 @@ def exit_program():
   pygame.quit()
   sys.exit()
 
+
 def main():
   # check the Python version so that We don't end up with strange behavior
   version = sys.version_info
@@ -733,7 +734,7 @@ def main():
   info = pygame.display.Info()
   smallest_dim = min(info.current_w, info.current_h)
   win_size = round(INITIAL_WINDOW_SIZE*smallest_dim)
-  screen = pygame.display.set_mode((win_size, win_size))
+  screen = pygame.display.set_mode((win_size, win_size), pygame.RESIZABLE)
   pygame.display.set_caption("Uncle Bernard's Basement")
 
   # instantiate constants container
