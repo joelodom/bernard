@@ -18,6 +18,7 @@ import images
 import inventory
 import gui
 import chest
+import win
 
 # tunables
 
@@ -67,6 +68,8 @@ SMALL_MESSAGE_FONT_DIVISOR = 60
 SMALL_MESSAGE_RELATIVE_Y = 0.9
 
 MAX_WEAPON_CHARGE = 10
+
+WIN_LEVEL = 25 # the level at which the player wins
 
 # other constants (not intended to be tunable)
 CLOCK_TICK_EVENT = pygame.USEREVENT + 1
@@ -348,14 +351,14 @@ def build_info_surface(constants, player, bomb, objects_in_maze):
 
   fraction_health_remaining = player.health/player.MAX_HEALTH
 
-  pygame.draw.rect(info_surface, colors.SOLID_BLUE,
+  pygame.draw.rect(info_surface, colors.SOLID_RED,
     (int(HEALTH_BAR_RELATIVE_X*constants.SCREEN_WIDTH),
     int(HEALTH_BAR_RELATIVE_Y*constants.SCREEN_HEIGHT),
     int(HEALTH_BAR_RELATIVE_WIDTH*constants.SCREEN_WIDTH),
     int(HEALTH_BAR_RELATIVE_HEIGHT*constants.SCREEN_HEIGHT)),
     HEALTH_BAR_OUTLINE_WIDTH)
 
-  info_surface.fill(colors.SOLID_BLUE,
+  info_surface.fill(colors.SOLID_RED,
     (int(HEALTH_BAR_RELATIVE_X*constants.SCREEN_WIDTH),
     int(HEALTH_BAR_RELATIVE_Y*constants.SCREEN_HEIGHT),
     int(fraction_health_remaining*HEALTH_BAR_RELATIVE_WIDTH*constants.SCREEN_WIDTH),
@@ -365,14 +368,14 @@ def build_info_surface(constants, player, bomb, objects_in_maze):
 
   fraction_charge_remaining = player.weapon.charge/MAX_WEAPON_CHARGE
 
-  pygame.draw.rect(info_surface, colors.SOLID_WHITE,
+  pygame.draw.rect(info_surface, colors.SOLID_BLUE,
     (int(CHARGE_BAR_RELATIVE_X*constants.SCREEN_WIDTH),
     int(CHARGE_BAR_RELATIVE_Y*constants.SCREEN_HEIGHT),
     int(CHARGE_BAR_RELATIVE_WIDTH*constants.SCREEN_WIDTH),
     int(CHARGE_BAR_RELATIVE_HEIGHT*constants.SCREEN_HEIGHT)),
     CHARGE_BAR_OUTLINE_WIDTH)
 
-  info_surface.fill(colors.SOLID_WHITE,
+  info_surface.fill(colors.SOLID_BLUE,
     (int(CHARGE_BAR_RELATIVE_X*constants.SCREEN_WIDTH),
     int(CHARGE_BAR_RELATIVE_Y*constants.SCREEN_HEIGHT),
     int(fraction_charge_remaining*CHARGE_BAR_RELATIVE_WIDTH*constants.SCREEN_WIDTH),
@@ -407,7 +410,9 @@ def build_info_surface(constants, player, bomb, objects_in_maze):
 def test_for_monster_collision(player, monsters_in_maze):
   collision_happened = False
   for monster in monsters_in_maze.get_monsters_at(player.x, player.y):
-    player.handle_monster_collision(monster)
+    # line commented out by Jack so damage doesn't occur when a player
+    # steps into a monster
+    #player.handle_monster_collision(monster)
     collision_happened = True
   return collision_happened
 
@@ -703,7 +708,8 @@ def run_level(constants, screen, player, mazes, maze_objects):
     # handle quit events
     elif event.type == pygame.QUIT or (
       event.type == pygame.KEYUP and event.key == pygame.K_ESCAPE):
-        return None # no next level
+        pygame.quit()
+        sys.exit()
 
 
 def exit_program():
@@ -760,6 +766,8 @@ def main():
       player.y = constants.MAZE_HEIGHT - 1
       player.facing = 0 # north
     level = next_level
+    if level >= WIN_LEVEL:
+      win_game = win.Win()
 
   exit_program()
 

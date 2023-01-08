@@ -70,9 +70,23 @@ class SuperMegaCannon(Weapon):
     self.NUMBER_OF_BOLTS = 5
     self.DAMAGE = 18
 
+class MultiBlaster(Weapon):
+  def __init__(self, constants):
+    super(MultiBlaster, self).__init__(constants)
+
+    self.COST = 0 # need to change if it can ever be bought
+    self.NAME = 'Multi Blaster'
+    self.DESCRIPTION = 'This wepon shoots two beams at once, making the scare time on monsters longer.'
+    self.BEAM_LENGTH = 1;
+    self.BEAM_WIDTH_STEP = 10
+    self.BEAM_SEGMENTS = 5
+    self.BEAM_WIDTH = 2
+    self.NUMBER_OF_BOLTS = 2
+    self.DAMAGE = 8
+
 def list_weapons(constants):
   # returns a tuple with an instance of each weapon type
-  return ( MiniBlaster(constants), SuperMegaCannon(constants) )
+  return ( MiniBlaster(constants), SuperMegaCannon(constants), MultiBlaster(constants) )
 
 #
 # TESTS

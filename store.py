@@ -12,7 +12,7 @@ BORDER_WIDTH = 10
 class Store:
   def __init__(self, constants):
     self.constants = constants
-    self.items = food.list_food() + weapons.list_weapons(constants)
+    self.items = food.list_food(constants) + weapons.list_weapons(constants)
     self.selected_item = 0
     self.selection_box_topleftx = BORDER_WIDTH
     self.selection_box_toplefty = BORDER_WIDTH + 7
