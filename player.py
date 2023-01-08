@@ -25,6 +25,8 @@ class Player:
     self.bombs = []
     self.selected_bomb = None
 
+    #Turn on for development only
+    #self.lantern = lanterns.FullMap(constants)
     self.lantern = lanterns.Candle(constants) # a starter lantern
     self.weapon = weapons.MiniBlaster(constants)
 

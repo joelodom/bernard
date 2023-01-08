@@ -38,11 +38,19 @@ class HugeLantern(Lantern):
     self.NAME = 'Huge Lantern'
     self.RADIUS = 5
     self.DESCRIPTION = 'A sun in a bottle.'
-    self.MIN_LEVEL = 25
+    self.MIN_LEVEL = 20
+
+#For development
+'''class FullMap(Lantern):
+  def __init__(self, constants):
+    self.NAME = 'Full Map'
+    self.RADIUS = 10000
+    self.DESCRIPTION = 'Well, I guess you have this now.'
+    self.MIN_LEVEL = 1'''
 
 
 def list_lanterns(constants):
-  return ( Candle(constants), MiniFlashlight(constants), BigFlashlight(constants),
+  return (Candle(constants), MiniFlashlight(constants), BigFlashlight(constants),
            CampLantern(constants), HugeLantern(constants))
 
 
