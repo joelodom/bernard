@@ -598,7 +598,8 @@ def run_level(constants, screen, player, mazes, maze_objects):
       # must be on stairs down
       if player_is_on_down_stairs(player, constants):
         next_level = (constants.LEVEL + 1)
-        draw_centered_message(screen, "Going to Level %s" % next_level, LARGE_MESSAGE_FONT_DIVISOR)
+        draw_centered_message(screen, "Going to Level %s" % next_level,
+                              LARGE_MESSAGE_FONT_DIVISOR)
         sounds.stop_all_sounds()
         pause(2000)
         return next_level
@@ -607,7 +608,8 @@ def run_level(constants, screen, player, mazes, maze_objects):
       # must be on stairs up
       if player_is_on_up_stairs(player, constants):
         next_level = (constants.LEVEL - 1)
-        draw_centered_message(screen, "Going to Level %s" % next_level, LARGE_MESSAGE_FONT_DIVISOR)
+        draw_centered_message(screen, "Going to Level %s" % next_level,
+                              LARGE_MESSAGE_FONT_DIVISOR)
         sounds.stop_all_sounds()
         pause(2000)
         return next_level
@@ -630,7 +632,8 @@ def run_level(constants, screen, player, mazes, maze_objects):
     # handle skip forward key (temporary code)
     elif event.type == pygame.KEYUP and event.key == pygame.K_F10:
       next_level = (constants.LEVEL + 5)
-      draw_centered_message(screen, "Going to Level %s" % next_level, LARGE_MESSAGE_FONT_DIVISOR)
+      draw_centered_message(screen, "Going to Level %s" % next_level,
+                            LARGE_MESSAGE_FONT_DIVISOR)
       sounds.stop_all_sounds()
       pause(2000)
       return next_level
@@ -768,7 +771,10 @@ def main():
     level = next_level
     if level >= WIN_LEVEL:
       screen.fill(colors.SOLID_BLACK)
-      draw_centered_message(screen, "Congradulations! You have won by completing the last level!", 75)
+      WIN_MESSAGE_FONT_DIVISOR = 75
+      draw_centered_message(screen,
+                            "Congratulations! You have won by completing the last level!",
+                            WIN_MESSAGE_FONT_DIVISOR)
       time.sleep(5) # sleep for five seconds, eventually we'll exit to main menu or something
       pygame.quit()
       sys.exit()
