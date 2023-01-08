@@ -408,6 +408,8 @@ def build_info_surface(constants, player, bomb, objects_in_maze):
 def test_for_monster_collision(player, monsters_in_maze):
   collision_happened = False
   for monster in monsters_in_maze.get_monsters_at(player.x, player.y):
+    # line commented out by Jack so damage doesn't occur when a player
+    # steps into a monster
     #player.handle_monster_collision(monster)
     collision_happened = True
   return collision_happened
