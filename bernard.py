@@ -69,6 +69,8 @@ SMALL_MESSAGE_RELATIVE_Y = 0.9
 
 MAX_WEAPON_CHARGE = 10
 
+WIN_LEVEL = 25 # the level at which the player wins
+
 # other constants (not intended to be tunable)
 CLOCK_TICK_EVENT = pygame.USEREVENT + 1
 WEAPON_TICK_EVENT = pygame.USEREVENT + 2
@@ -764,8 +766,7 @@ def main():
       player.y = constants.MAZE_HEIGHT - 1
       player.facing = 0 # north
     level = next_level
-    print(level)
-    if level >= 25:
+    if level >= WIN_LEVEL:
       win_game = win.Win()
 
   exit_program()
