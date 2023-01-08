@@ -18,7 +18,7 @@ import images
 import inventory
 import gui
 import chest
-import win
+import time
 
 # tunables
 
@@ -76,23 +76,23 @@ CLOCK_TICK_EVENT = pygame.USEREVENT + 1
 WEAPON_TICK_EVENT = pygame.USEREVENT + 2
 
 
-def draw_centered_text(surface, message):
+def draw_centered_text(surface, message, size):
   '''Draws a centered message on any surface.'''
   (surface_width, surface_height) = surface.get_size()
-  size = (surface_width + surface_height)//LARGE_MESSAGE_FONT_DIVISOR
+  size = (surface_width + surface_height)//size
   font = pygame.font.SysFont("monospace", size, bold=True)
   rendered_text = font.render(message, True, colors.SOLID_RED)
   (width, height) = font.size(message)
   surface.blit(rendered_text, ((surface_width - width)//2, (surface_height - height)//2))
 
 
-def draw_centered_message(screen, message):
+def draw_centered_message(screen, message, size):
   '''Draws a centered message on the game screen.
 
   Use this function if you plan to pause after drawing to hold an informational message
   on the game screen.
   '''
-  draw_centered_text(screen, message)
+  draw_centered_text(screen, message, size)
   pygame.display.update()
 
 
@@ -510,7 +510,7 @@ def run_level(constants, screen, player, mazes, maze_objects):
 
     # test for player death
     if player.health <= 0:
-      draw_centered_message(screen, "Game Over")
+      draw_centered_message(screen, "Game Over", LARGE_MESSAGE_FONT_DIVISOR)
       sounds.stop_all_sounds()
       pause(5000)
       return None # no next level
@@ -598,7 +598,7 @@ def run_level(constants, screen, player, mazes, maze_objects):
       # must be on stairs down
       if player_is_on_down_stairs(player, constants):
         next_level = (constants.LEVEL + 1)
-        draw_centered_message(screen, "Going to Level %s" % next_level)
+        draw_centered_message(screen, "Going to Level %s" % next_level, LARGE_MESSAGE_FONT_DIVISOR)
         sounds.stop_all_sounds()
         pause(2000)
         return next_level
@@ -607,7 +607,7 @@ def run_level(constants, screen, player, mazes, maze_objects):
       # must be on stairs up
       if player_is_on_up_stairs(player, constants):
         next_level = (constants.LEVEL - 1)
-        draw_centered_message(screen, "Going to Level %s" % next_level)
+        draw_centered_message(screen, "Going to Level %s" % next_level, LARGE_MESSAGE_FONT_DIVISOR)
         sounds.stop_all_sounds()
         pause(2000)
         return next_level
@@ -630,7 +630,7 @@ def run_level(constants, screen, player, mazes, maze_objects):
     # handle skip forward key (temporary code)
     elif event.type == pygame.KEYUP and event.key == pygame.K_F10:
       next_level = (constants.LEVEL + 5)
-      draw_centered_message(screen, "Going to Level %s" % next_level)
+      draw_centered_message(screen, "Going to Level %s" % next_level, LARGE_MESSAGE_FONT_DIVISOR)
       sounds.stop_all_sounds()
       pause(2000)
       return next_level
@@ -657,7 +657,7 @@ def run_level(constants, screen, player, mazes, maze_objects):
 
     # handle pause key
     elif event.type == pygame.KEYUP and event.key == pygame.K_p:
-      draw_centered_message(screen, "Paused")
+      draw_centered_message(screen, "Paused", LARGE_MESSAGE_FONT_DIVISOR)
       while True:
         event = pygame.event.wait()
         if event.type == pygame.KEYUP and event.key == pygame.K_p:
@@ -767,7 +767,11 @@ def main():
       player.facing = 0 # north
     level = next_level
     if level >= WIN_LEVEL:
-      win_game = win.Win()
+      screen.fill(colors.SOLID_BLACK)
+      draw_centered_message(screen, "Congradulations! You have won by completing the last level!", 75)
+      time.sleep(5) # sleep for five seconds, eventually we'll exit to main menu or something
+      pygame.quit()
+      sys.exit()
 
   exit_program()
 
