@@ -345,7 +345,7 @@ def build_info_surface(constants, player, bomb, objects_in_maze):
 
   # draw bomb time left
   if bomb != None and bomb.time_remaining > 0:
-    draw_centered_text(info_surface, str(bomb.time_remaining))
+    draw_centered_text(info_surface, str(bomb.time_remaining), LARGE_MESSAGE_FONT_DIVISOR)
 
   # draw the health bar
 
