@@ -740,6 +740,7 @@ def main():
   smallest_dim = min(info.current_w, info.current_h)
   win_size = round(INITIAL_WINDOW_SIZE*smallest_dim)
   screen = pygame.display.set_mode((win_size, win_size), pygame.RESIZABLE)
+  print(win_size)
   pygame.display.set_caption("Uncle Bernard's Basement")
 
   # instantiate constants container
