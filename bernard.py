@@ -1,4 +1,4 @@
-# Copyright (c) 2013-2015 by Joel Odom & Alex Odom, Marietta, GA All Rights Reserved
+# Copyright (c) 2013-2023 by Joel Odom, Alex Odom, & Jack Odom Marietta, GA All Rights Reserved
 
 import pygame
 import sys
